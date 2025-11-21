@@ -12,19 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/theme/toggle";
+import { SceneToggle } from "@/components/theme/scene-toggle";
 import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { SignInCard } from "@/components/auth/sign-in-card";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { SignInCard } from "./auth/sign-in-card";
 
 // Navigation links - add your links here, leave empty to hide navigation
 const navLinks: { name: string; href: string }[] = [
@@ -33,8 +29,20 @@ const navLinks: { name: string; href: string }[] = [
   { name: "Contact", href: "/contact" },
 ];
 
+const AuthLoadingButton = ({ className }: { className?: string }) => (
+  <Button
+    variant="outline"
+    size="sm"
+    disabled
+    className={`uppercase tracking-wider text-xs font-bold ${className}`}
+  >
+    <Spinner className="mr-2 h-3 w-3" />
+    Retrieving Session
+  </Button>
+);
+
 export function Header() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -97,7 +105,15 @@ export function Header() {
 
         {/* Right Side */}
         <div className="flex items-center space-x-4">
-          {session ? (
+          {isPending ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+            >
+              <AuthLoadingButton />
+            </motion.div>
+          ) : session ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -137,7 +153,6 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <motion.div
-              className="hidden md:block"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8, duration: 0.5 }}
@@ -176,7 +191,7 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-48 rounded-none border-border"
+                className="w-56 rounded-none border-border"
               >
                 {navLinks.length > 0 &&
                   navLinks.map((link) => (
@@ -194,36 +209,14 @@ export function Header() {
                     </DropdownMenuItem>
                   ))}
                 {navLinks.length > 0 && <DropdownMenuSeparator />}
-                <DropdownMenuItem
-                  className="justify-center w-full px-1 rounded-none focus:bg-transparent"
-                  asChild
-                >
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="default"
-                        size="sm"
-                        className="w-full rounded-none uppercase tracking-wider text-xs font-bold"
-                      >
-                        Sign In
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogTitle className="sr-only">Sign In</DialogTitle>
-                      <div className="flex items-center justify-center py-4">
-                        <SignInCard
-                          title="Welcome Back"
-                          description="Sign in to your account to continue"
-                        />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                <DropdownMenuItem className="p-0 focus:bg-transparent">
+                  <SceneToggle />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
 
-          <ThemeToggle />
+          <ThemeToggle className="hidden md:flex" />
         </div>
       </div>
     </motion.header>

@@ -106,10 +106,21 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-end gap-4 relative z-20">
+        <div className="border-t border-border py-8 flex flex-col md:flex-row justify-between items-end gap-4 relative z-20">
           <p className="text-sm text-muted-foreground">
             © {currentYear} The Scriber Company.
           </p>
+            <p className="text-sm text-muted-foreground">
+            Built & Maintained by{" "}
+            <Link
+              href="https://www.johanan.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors underline underline-offset-2"
+            >
+              Johanan S. A.
+            </Link>
+            </p>
         </div>
       </div>
 
