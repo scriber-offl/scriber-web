@@ -14,9 +14,11 @@ export const auth = betterAuth<BetterAuthOptions>({
   },
   plugins: [
     admin({
-      adminUserIds: ["ek44rVUzkdR3cqL17sJ5LwaRuVqdTNXy"]
-    }
-    )
+      adminUserIds: [
+        "ek44rVUzkdR3cqL17sJ5LwaRuVqdTNXy",
+        "2xi3YeeVzQ8Wf8BH5DEgvKqTv2b5mdbb",
+      ],
+    }),
   ],
   socialProviders: {
     github: {
