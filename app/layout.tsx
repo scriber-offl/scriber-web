@@ -21,6 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://scriber.in"),
   title: {
     default: "Scriber - Digital Solutions & Educational Marketplace",
     template: "%s | Scriber",
@@ -37,6 +38,27 @@ export const metadata: Metadata = {
     "ScriberLabs",
     "Scriber Branding",
   ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://scriber.in",
+    siteName: "Scriber",
+    images: [
+      {
+        url: "/scriber-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Scriber - Digital Solutions & Educational Marketplace",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Scriber - Digital Solutions & Educational Marketplace",
+    description:
+      "Scriber: TLM Marketplace for educational materials, ScriberLabs for digital marketing, and Scriber Branding for complete business branding solutions.",
+    images: ["/scriber-og.png"],
+  },
 };
 
 export default function RootLayout({

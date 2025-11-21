@@ -1,5 +1,12 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms and Conditions",
+  description:
+    "Read Scriber's Terms and Conditions regarding the use of our website and services.",
+};
 
 export default function TermsPage() {
   return (

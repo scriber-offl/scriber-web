@@ -1,5 +1,20 @@
 import { getPortfolioItemsByStream } from "@/actions/portfolio";
 import BrandingClient from "./branding-client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scriber Branding - Brand Design & Identity",
+  description:
+    "Scriber Branding helps create memorable brands that resonate with audiences. From logo design to complete brand identity and marketing materials.",
+  keywords: [
+    "Scriber Branding",
+    "Brand Design",
+    "Logo Design",
+    "Brand Identity",
+    "Marketing Materials",
+    "Corporate Branding",
+  ],
+};
 
 export default async function BrandingPage() {
   const portfolioItems = await getPortfolioItemsByStream("branding");
