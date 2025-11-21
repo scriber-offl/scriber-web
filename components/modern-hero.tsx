@@ -3,12 +3,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Spotlight } from "./backgrounds/spotlight-bg";
 
 export function ModernHero() {
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background text-foreground">
-      <Spotlight/>
+      {/* <Spotlight/> */}
       {/* Modern Grid Background with Animated Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
@@ -53,19 +52,6 @@ export function ModernHero() {
           </Link>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
-      >
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-          Scroll
-        </span>
-        <div className="h-12 w-[1px] bg-gradient-to-b from-foreground to-transparent"></div>
-      </motion.div>
     </div>
   );
 }

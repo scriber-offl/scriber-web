@@ -20,8 +20,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Star, User, ArrowRight } from "lucide-react";
+import { Star, User, ArrowRight, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
+import { addReview } from "@/actions/portfolio";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 export interface PortfolioItem {
   id: string;
@@ -31,8 +37,10 @@ export interface PortfolioItem {
   description: string;
   fullDescription: string;
   rating: number;
+  customerEmails?: string[] | null;
   reviews: {
     user: string;
+    userId: string;
     comment: string;
     rating: number;
   }[];
@@ -54,6 +62,33 @@ export function PortfolioSection({
 }: PortfolioSectionProps) {
   const [showAll, setShowAll] = useState(false);
   const displayedItems = showAll ? items : items.slice(0, 3);
+  const { data: session } = authClient.useSession();
+  const router = useRouter();
+
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmitReview = async (portfolioId: string) => {
+    if (!reviewComment.trim()) {
+      toast.error("Please enter a comment");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await addReview(portfolioId, reviewRating, reviewComment);
+      toast.success("Review submitted successfully!");
+      setReviewComment("");
+      setReviewRating(5);
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit review"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="py-20 bg-background">
@@ -67,29 +102,269 @@ export function PortfolioSection({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
-            {displayedItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                layout
-              >
-                <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-border/50">
-                  <div className="h-48 bg-muted relative overflow-hidden group">
-                    {/* Placeholder for image */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary/20">
-                      <span className="text-4xl font-bold opacity-20">
-                        {item.category}
-                      </span>
+            {displayedItems.map((item, index) => {
+              const isAdmin = session?.user?.role === "admin";
+              const canReview =
+                session?.user &&
+                !isAdmin &&
+                item.customerEmails?.includes(session.user.email!) &&
+                !item.reviews.some((r) => r.userId === session.user.id);
+
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  layout
+                >
+                  <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-border/50">
+                    <div className="h-48 bg-muted relative overflow-hidden group">
+                      {item.image && item.image !== "/placeholder.jpg" ? (
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary/20">
+                          <span className="text-4xl font-bold opacity-20">
+                            {item.category}
+                          </span>
+                        </div>
+                      )}
+                      {/* Overlay on hover */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="secondary" size="sm">
+                              View Details
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-7xl max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle className="text-2xl">
+                                {item.title}
+                              </DialogTitle>
+                              <DialogDescription>
+                                {item.category}
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            <div className="grid md:grid-cols-5 gap-8 py-4">
+                              <div className="space-y-4 md:col-span-3">
+                                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 overflow-hidden relative">
+                                  {item.image &&
+                                  item.image !== "/placeholder.jpg" ? (
+                                    <img
+                                      src={item.image}
+                                      alt={item.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                                      <span className="text-lg">
+                                        Project Image (Large)
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="flex">
+                                    {[...Array(5)].map((_, i) => (
+                                      <Star
+                                        key={i}
+                                        className={`w-5 h-5 ${
+                                          i < Math.floor(item.rating)
+                                            ? "text-yellow-500 fill-yellow-500"
+                                            : "text-muted-foreground"
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                  <span className="text-base text-muted-foreground font-medium">
+                                    ({item.rating} / 5)
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="space-y-6 md:col-span-2 flex flex-col justify-center">
+                                <div>
+                                  <h4 className="font-semibold mb-2 text-lg">
+                                    About the Project
+                                  </h4>
+                                  <p className="text-muted-foreground text-base leading-relaxed">
+                                    {item.fullDescription}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <h4 className="font-semibold mb-3 text-lg">
+                                    Client Reviews
+                                  </h4>
+                                  <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                                    {item.reviews.length > 0 ? (
+                                      item.reviews.map((review, idx) => (
+                                        <div
+                                          key={idx}
+                                          className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
+                                        >
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                                              <User className="w-3 h-3 text-primary" />
+                                            </div>
+                                            <span className="font-medium">
+                                              {review.user}
+                                            </span>
+                                            <div className="flex ml-auto">
+                                              {[...Array(5)].map((_, i) => (
+                                                <Star
+                                                  key={i}
+                                                  className={`w-3 h-3 ${
+                                                    i < review.rating
+                                                      ? "text-yellow-500 fill-yellow-500"
+                                                      : "text-muted-foreground"
+                                                  }`}
+                                                />
+                                              ))}
+                                            </div>
+                                          </div>
+                                          <p className="text-muted-foreground italic">
+                                            &quot;{review.comment}&quot;
+                                          </p>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <p className="text-muted-foreground text-sm italic">
+                                        No reviews yet.
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {isAdmin && (
+                                  <div className="bg-destructive/10 p-4 rounded-lg border border-destructive/20 mt-4">
+                                    <h4 className="font-semibold mb-1 text-sm text-destructive flex items-center gap-2">
+                                      <ShieldAlert className="w-4 h-4" />
+                                      Admin Access
+                                    </h4>
+                                    <p className="text-xs text-muted-foreground">
+                                      Administrators are not permitted to leave
+                                      reviews on portfolio items.
+                                    </p>
+                                  </div>
+                                )}
+
+                                {canReview && (
+                                  <div className="bg-muted/30 p-4 rounded-lg border border-border/50 mt-4">
+                                    <h4 className="font-semibold mb-3 text-sm">
+                                      Leave a Review
+                                    </h4>
+                                    <div className="space-y-3">
+                                      <div>
+                                        <Label className="text-xs mb-1.5 block">
+                                          Rating
+                                        </Label>
+                                        <div className="flex gap-1">
+                                          {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                              key={star}
+                                              type="button"
+                                              onClick={() =>
+                                                setReviewRating(star)
+                                              }
+                                              className="focus:outline-none"
+                                            >
+                                              <Star
+                                                className={`w-5 h-5 ${
+                                                  star <= reviewRating
+                                                    ? "text-yellow-500 fill-yellow-500"
+                                                    : "text-muted-foreground"
+                                                }`}
+                                              />
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <Label
+                                          htmlFor="comment"
+                                          className="text-xs mb-1.5 block"
+                                        >
+                                          Comment
+                                        </Label>
+                                        <Textarea
+                                          id="comment"
+                                          placeholder="Share your experience..."
+                                          value={reviewComment}
+                                          onChange={(e) =>
+                                            setReviewComment(e.target.value)
+                                          }
+                                          className="min-h-[80px] text-sm"
+                                        />
+                                      </div>
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          handleSubmitReview(item.id)
+                                        }
+                                        disabled={isSubmitting}
+                                        className="w-full"
+                                      >
+                                        {isSubmitting
+                                          ? "Submitting..."
+                                          : "Submit Review"}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <DialogFooter className="sm:justify-between gap-4 items-center border-t pt-4 mt-4">
+                              <div className="text-xs text-muted-foreground">
+                                Want something similar?
+                              </div>
+                              <DialogTrigger asChild>
+                                <Button
+                                  onClick={() => onRequestProject(item)}
+                                  className="w-full sm:w-auto"
+                                >
+                                  Request This Project
+                                  <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                              </DialogTrigger>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg mb-1">
+                            {item.title}
+                          </CardTitle>
+                          <CardDescription>{item.category}</CardDescription>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {item.rating} ★
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <p className="text-sm text-muted-foreground line-clamp-3">
+                        {item.description}
+                      </p>
+                    </CardContent>
+                    <CardFooter>
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button variant="secondary" size="sm">
-                            View Details
+                          <Button variant="outline" className="w-full group">
+                            Know More
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-7xl max-h-[90vh] overflow-y-auto">
@@ -104,13 +379,21 @@ export function PortfolioSection({
 
                           <div className="grid md:grid-cols-5 gap-8 py-4">
                             <div className="space-y-4 md:col-span-3">
-                              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 overflow-hidden">
-                                {/* In a real app, use Next.js Image component here */}
-                                <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-                                  <span className="text-lg">
-                                    Project Image (Large)
-                                  </span>
-                                </div>
+                              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 overflow-hidden relative">
+                                {item.image &&
+                                item.image !== "/placeholder.jpg" ? (
+                                  <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+                                    <span className="text-lg">
+                                      Project Image (Large)
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="flex">
@@ -126,7 +409,7 @@ export function PortfolioSection({
                                   ))}
                                 </div>
                                 <span className="text-base text-muted-foreground font-medium">
-                                  ({item.rating} / 5.0)
+                                  ({item.rating} / 5)
                                 </span>
                               </div>
                             </div>
@@ -145,27 +428,122 @@ export function PortfolioSection({
                                 <h4 className="font-semibold mb-3 text-lg">
                                   Client Reviews
                                 </h4>
-                                <div className="space-y-4">
-                                  {item.reviews.map((review, idx) => (
-                                    <div
-                                      key={idx}
-                                      className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
-                                    >
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                          <User className="w-3 h-3 text-primary" />
+                                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                                  {item.reviews.length > 0 ? (
+                                    item.reviews.map((review, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
+                                      >
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                                            <User className="w-3 h-3 text-primary" />
+                                          </div>
+                                          <span className="font-medium">
+                                            {review.user}
+                                          </span>
+                                          <div className="flex ml-auto">
+                                            {[...Array(5)].map((_, i) => (
+                                              <Star
+                                                key={i}
+                                                className={`w-3 h-3 ${
+                                                  i < review.rating
+                                                    ? "text-yellow-500 fill-yellow-500"
+                                                    : "text-muted-foreground"
+                                                }`}
+                                              />
+                                            ))}
+                                          </div>
                                         </div>
-                                        <span className="font-medium">
-                                          {review.user}
-                                        </span>
+                                        <p className="text-muted-foreground italic">
+                                          &quot;{review.comment}&quot;
+                                        </p>
                                       </div>
-                                      <p className="text-muted-foreground italic">
-                                        &quot;{review.comment}&quot;
-                                      </p>
-                                    </div>
-                                  ))}
+                                    ))
+                                  ) : (
+                                    <p className="text-muted-foreground text-sm italic">
+                                      No reviews yet.
+                                    </p>
+                                  )}
                                 </div>
                               </div>
+
+                              {isAdmin && (
+                                <div className="bg-destructive/10 p-4 rounded-lg border border-destructive/20 mt-4">
+                                  <h4 className="font-semibold mb-1 text-sm text-destructive flex items-center gap-2">
+                                    <ShieldAlert className="w-4 h-4" />
+                                    Admin Access
+                                  </h4>
+                                  <p className="text-xs text-muted-foreground">
+                                    Administrators are not permitted to leave
+                                    reviews on portfolio items.
+                                  </p>
+                                </div>
+                              )}
+
+                              {canReview && (
+                                <div className="bg-muted/30 p-4 rounded-lg border border-border/50 mt-4">
+                                  <h4 className="font-semibold mb-3 text-sm">
+                                    Leave a Review
+                                  </h4>
+                                  <div className="space-y-3">
+                                    <div>
+                                      <Label className="text-xs mb-1.5 block">
+                                        Rating
+                                      </Label>
+                                      <div className="flex gap-1">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                          <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() =>
+                                              setReviewRating(star)
+                                            }
+                                            className="focus:outline-none"
+                                          >
+                                            <Star
+                                              className={`w-5 h-5 ${
+                                                star <= reviewRating
+                                                  ? "text-yellow-500 fill-yellow-500"
+                                                  : "text-muted-foreground"
+                                              }`}
+                                            />
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <Label
+                                        htmlFor="comment"
+                                        className="text-xs mb-1.5 block"
+                                      >
+                                        Comment
+                                      </Label>
+                                      <Textarea
+                                        id="comment"
+                                        placeholder="Share your experience..."
+                                        value={reviewComment}
+                                        onChange={(e) =>
+                                          setReviewComment(e.target.value)
+                                        }
+                                        className="min-h-[80px] text-sm"
+                                      />
+                                    </div>
+                                    <Button
+                                      size="sm"
+                                      onClick={() =>
+                                        handleSubmitReview(item.id)
+                                      }
+                                      disabled={isSubmitting}
+                                      className="w-full"
+                                    >
+                                      {isSubmitting
+                                        ? "Submitting..."
+                                        : "Submit Review"}
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -185,130 +563,11 @@ export function PortfolioSection({
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
-                    </div>
-                  </div>
-
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg mb-1">
-                          {item.title}
-                        </CardTitle>
-                        <CardDescription>{item.category}</CardDescription>
-                      </div>
-                      <Badge variant="outline" className="text-xs">
-                        {item.rating} ★
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" className="w-full group">
-                          Know More
-                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-7xl max-h-[90vh] overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle className="text-2xl">
-                            {item.title}
-                          </DialogTitle>
-                          <DialogDescription>{item.category}</DialogDescription>
-                        </DialogHeader>
-
-                        <div className="grid md:grid-cols-5 gap-8 py-4">
-                          <div className="space-y-4 md:col-span-3">
-                            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 overflow-hidden">
-                              {/* In a real app, use Next.js Image component here */}
-                              <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-                                <span className="text-lg">
-                                  Project Image (Large)
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-5 h-5 ${
-                                      i < Math.floor(item.rating)
-                                        ? "text-yellow-500 fill-yellow-500"
-                                        : "text-muted-foreground"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-base text-muted-foreground font-medium">
-                                ({item.rating} / 5.0)
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="space-y-6 md:col-span-2 flex flex-col justify-center">
-                            <div>
-                              <h4 className="font-semibold mb-2 text-lg">
-                                About the Project
-                              </h4>
-                              <p className="text-muted-foreground text-base leading-relaxed">
-                                {item.fullDescription}
-                              </p>
-                            </div>
-
-                            <div>
-                              <h4 className="font-semibold mb-3 text-lg">
-                                Client Reviews
-                              </h4>
-                              <div className="space-y-4">
-                                {item.reviews.map((review, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
-                                  >
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                        <User className="w-3 h-3 text-primary" />
-                                      </div>
-                                      <span className="font-medium">
-                                        {review.user}
-                                      </span>
-                                    </div>
-                                    <p className="text-muted-foreground italic">
-                                      &quot;{review.comment}&quot;
-                                    </p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <DialogFooter className="sm:justify-between gap-4 items-center border-t pt-4 mt-4">
-                          <div className="text-xs text-muted-foreground">
-                            Want something similar?
-                          </div>
-                          <DialogTrigger asChild>
-                            <Button
-                              onClick={() => onRequestProject(item)}
-                              className="w-full sm:w-auto"
-                            >
-                              Request This Project
-                              <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
-                          </DialogTrigger>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </CardFooter>
-                </Card>
-              </motion.div>
-            ))}
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
 

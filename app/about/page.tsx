@@ -333,9 +333,8 @@ export default function AboutPage() {
                 <Link href="/">Get Started</Link>
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 size="lg"
-                className="bg-transparent text-background border-background hover:bg-background hover:text-foreground"
                 asChild
               >
                 <Link href="mailto:contact@scriber.in">Contact Us</Link>

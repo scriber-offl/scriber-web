@@ -1,5 +1,6 @@
 import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin } from "better-auth/plugins";
 import { db } from "@/db";
 import * as schema from "../db/schema/auth";
 
@@ -11,6 +12,12 @@ export const auth = betterAuth<BetterAuthOptions>({
   emailAndPassword: {
     enabled: false,
   },
+  plugins: [
+    admin({
+      adminUserIds: ["ek44rVUzkdR3cqL17sJ5LwaRuVqdTNXy"]
+    }
+    )
+  ],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,

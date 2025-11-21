@@ -18,6 +18,14 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { SignInCard } from "@/components/auth/sign-in-card";
+
 // Navigation links - add your links here, leave empty to hide navigation
 const navLinks: { name: string; href: string }[] = [
   { name: "Home", href: "/" },
@@ -120,8 +128,10 @@ export function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <Button variant={"destructive"} className="w-full">
+                    <LogOut className="mr-0 h-4 w-4 text-red-100" />
+                    <span>Log out</span>
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -132,15 +142,26 @@ export function Header() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8, duration: 0.5 }}
             >
-              <Link href="/about" prefetch={true}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="uppercase tracking-wider text-xs font-bold border-foreground text-foreground bg-transparent hover:bg-foreground hover:text-background dark:bg-transparent dark:hover:bg-foreground rounded-none h-9 px-6"
-                >
-                  Learn More
-                </Button>
-              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="uppercase tracking-wider text-xs font-bold border-foreground text-foreground bg-transparent hover:bg-foreground hover:text-background dark:bg-transparent dark:hover:bg-foreground rounded-none h-9 px-6"
+                  >
+                    Sign In
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogTitle className="sr-only">Sign In</DialogTitle>
+                  <div className="flex items-center justify-center py-4">
+                    <SignInCard
+                      title="Welcome Back"
+                      description="Sign in to your account to continue"
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
             </motion.div>
           )}
 
@@ -173,16 +194,30 @@ export function Header() {
                     </DropdownMenuItem>
                   ))}
                 {navLinks.length > 0 && <DropdownMenuSeparator />}
-                <DropdownMenuItem className="justify-center w-full px-1 rounded-none focus:bg-transparent">
-                  <Link href="/about" className="w-full">
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="w-full rounded-none uppercase tracking-wider text-xs font-bold"
-                    >
-                      Know More
-                    </Button>
-                  </Link>
+                <DropdownMenuItem
+                  className="justify-center w-full px-1 rounded-none focus:bg-transparent"
+                  asChild
+                >
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="w-full rounded-none uppercase tracking-wider text-xs font-bold"
+                      >
+                        Sign In
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogTitle className="sr-only">Sign In</DialogTitle>
+                      <div className="flex items-center justify-center py-4">
+                        <SignInCard
+                          title="Welcome Back"
+                          description="Sign in to your account to continue"
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

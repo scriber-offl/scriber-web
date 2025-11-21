@@ -93,6 +93,23 @@ export function FormWrapper({
             </svg>
             Sign in with GitHub
           </Button>
+          <div className="text-xs text-center text-muted-foreground mt-4 px-4">
+            By signing in, you agree to our{" "}
+            <a
+              href="/terms"
+              className="underline underline-offset-2 hover:text-primary"
+            >
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a
+              href="/privacy-policy"
+              className="underline underline-offset-2 hover:text-primary"
+            >
+              Privacy Policy
+            </a>
+            .
+          </div>
         </CardContent>
       </Card>
     );
