@@ -57,36 +57,14 @@ interface PortfolioFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   itemToEdit?: PortfolioItem | null;
+  services: { id: string; name: string; stream: string }[];
 }
-
-const SERVICE_OPTIONS = {
-  branding: [
-    "Logo Design",
-    "Brand Identity Package",
-    "Flyers & Posters",
-    "Social Media Graphics",
-    "Packaging Design",
-  ],
-  labs: [
-    "SEO & Content Marketing",
-    "Social Media Management",
-    "Paid Advertising (PPC)",
-    "Web Design & Development",
-    "Full Digital Strategy",
-  ],
-  tlm: [
-    "Chart Work",
-    "Working Model",
-    "Static Model",
-    "Flash Cards",
-    "Other Teaching Aid",
-  ],
-};
 
 export function PortfolioForm({
   open,
   onOpenChange,
   itemToEdit,
+  services,
 }: PortfolioFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -291,13 +269,13 @@ export function PortfolioForm({
                   <SelectValue placeholder="Select service type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SERVICE_OPTIONS[
-                    formData.stream as keyof typeof SERVICE_OPTIONS
-                  ]?.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
+                  {services
+                    .filter((s) => s.stream === formData.stream)
+                    .map((service) => (
+                      <SelectItem key={service.id} value={service.name}>
+                        {service.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

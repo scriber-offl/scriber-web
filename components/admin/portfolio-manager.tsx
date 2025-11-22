@@ -48,7 +48,14 @@ interface PortfolioItem {
   createdAt: Date;
 }
 
-export function PortfolioManager({ items }: { items: PortfolioItem[] }) {
+export function PortfolioManager({
+  items,
+  services,
+}: {
+  items: PortfolioItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  services: any[];
+}) {
   const router = useRouter();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<PortfolioItem | null>(null);
@@ -171,6 +178,7 @@ export function PortfolioManager({ items }: { items: PortfolioItem[] }) {
         open={isFormOpen}
         onOpenChange={setIsFormOpen}
         itemToEdit={editingItem}
+        services={services}
       />
     </div>
   );

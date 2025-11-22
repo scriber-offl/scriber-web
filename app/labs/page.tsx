@@ -1,4 +1,5 @@
 import { getPortfolioItemsByStream } from "@/actions/portfolio";
+import { getServices } from "@/actions/services";
 import LabsClient from "./labs-client";
 import { Metadata } from "next";
 
@@ -18,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function LabsPage() {
-  const portfolioItems = await getPortfolioItemsByStream("labs");
+  const [portfolioItems, services] = await Promise.all([
+    getPortfolioItemsByStream("labs"),
+    getServices("labs"),
+  ]);
 
   const serializedItems = portfolioItems.map((item) => ({
     ...item,
@@ -26,5 +30,16 @@ export default async function LabsPage() {
     updatedAt: item.updatedAt.toISOString(),
   }));
 
-  return <LabsClient portfolioItems={serializedItems} />;
+  const serializedServices = services.map((service) => ({
+    ...service,
+    createdAt: service.createdAt.toISOString(),
+    updatedAt: service.updatedAt.toISOString(),
+  }));
+
+  return (
+    <LabsClient
+      portfolioItems={serializedItems}
+      services={serializedServices}
+    />
+  );
 }

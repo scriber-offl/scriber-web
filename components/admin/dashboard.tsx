@@ -10,6 +10,7 @@ import { ContactsList } from "./contacts-list";
 import { LeadsList } from "./leads-list";
 import { PortfolioManager } from "./portfolio-manager";
 import { ReviewsList } from "./reviews-list";
+import { ServicesManager } from "./services-manager";
 import { ThemeToggle } from "@/components/theme/toggle";
 import {
   DropdownMenu,
@@ -27,6 +28,8 @@ interface AdminDashboardProps {
   initialPortfolioItems: any[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialReviews: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialServices: any[];
 }
 
 export function AdminDashboard({
@@ -34,6 +37,7 @@ export function AdminDashboard({
   initialLeads,
   initialPortfolioItems,
   initialReviews,
+  initialServices,
 }: AdminDashboardProps) {
   const router = useRouter();
 
@@ -108,6 +112,7 @@ export function AdminDashboard({
             <TabsTrigger value="leads">Leads</TabsTrigger>
             <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
+            <TabsTrigger value="services">Services</TabsTrigger>
           </TabsList>
           <TabsContent value="contacts" className="space-y-4">
             <ContactsList contacts={initialContacts} />
@@ -116,10 +121,16 @@ export function AdminDashboard({
             <LeadsList leads={initialLeads} />
           </TabsContent>
           <TabsContent value="portfolio" className="space-y-4">
-            <PortfolioManager items={initialPortfolioItems} />
+            <PortfolioManager
+              items={initialPortfolioItems}
+              services={initialServices}
+            />
           </TabsContent>
           <TabsContent value="reviews" className="space-y-4">
             <ReviewsList reviews={initialReviews} />
+          </TabsContent>
+          <TabsContent value="services" className="space-y-4">
+            <ServicesManager services={initialServices} />
           </TabsContent>
         </Tabs>
       </div>

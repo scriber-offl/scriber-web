@@ -1,4 +1,5 @@
 import { getPortfolioItemsByStream } from "@/actions/portfolio";
+import { getServices } from "@/actions/services";
 import BrandingClient from "./branding-client";
 import { Metadata } from "next";
 
@@ -17,12 +18,27 @@ export const metadata: Metadata = {
 };
 
 export default async function BrandingPage() {
-  const portfolioItems = await getPortfolioItemsByStream("branding");
+  const [portfolioItems, services] = await Promise.all([
+    getPortfolioItemsByStream("branding"),
+    getServices("branding"),
+  ]);
 
   const serializedItems = portfolioItems.map((item) => ({
     ...item,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
   }));
-  return <BrandingClient portfolioItems={serializedItems} />;
+
+  const serializedServices = services.map((service) => ({
+    ...service,
+    createdAt: service.createdAt.toISOString(),
+    updatedAt: service.updatedAt.toISOString(),
+  }));
+
+  return (
+    <BrandingClient
+      portfolioItems={serializedItems}
+      services={serializedServices}
+    />
+  );
 }

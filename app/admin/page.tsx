@@ -5,6 +5,7 @@ import { ForbiddenView } from "@/components/admin/forbidden-view";
 import { SignInCard } from "@/components/auth/sign-in-card";
 import { getContacts, getLeads } from "@/actions/admin";
 import { getPortfolioItems, getAllReviews } from "@/actions/portfolio";
+import { getServices } from "@/actions/services";
 
 export default async function AdminPage() {
   const session = await auth.api.getSession({
@@ -30,12 +31,14 @@ export default async function AdminPage() {
     return <ForbiddenView />;
   }
 
-  const [contacts, leads, portfolioItems, reviews] = await Promise.all([
-    getContacts(),
-    getLeads(),
-    getPortfolioItems(),
-    getAllReviews(),
-  ]);
+  const [contacts, leads, portfolioItems, reviews, services] =
+    await Promise.all([
+      getContacts(),
+      getLeads(),
+      getPortfolioItems(),
+      getAllReviews(),
+      getServices(),
+    ]);
 
   return (
     <AdminDashboard
@@ -43,6 +46,7 @@ export default async function AdminPage() {
       initialLeads={leads}
       initialPortfolioItems={portfolioItems}
       initialReviews={reviews}
+      initialServices={services}
     />
   );
 }

@@ -6,9 +6,8 @@ import { Footer } from "@/components/footer";
 import { Spotlight } from "@/components/backgrounds/spotlight-bg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { TrendingUp, BarChart, Globe, Share2, CheckCircle } from "lucide-react";
+import { TrendingUp, BarChart, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PortfolioSection,
   PortfolioItem,
@@ -21,12 +20,18 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
+import { ServicesSection } from "@/components/services-section";
 
 interface LabsClientProps {
   portfolioItems: PortfolioItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  services: any[];
 }
 
-export default function LabsClient({ portfolioItems }: LabsClientProps) {
+export default function LabsClient({
+  portfolioItems,
+  services,
+}: LabsClientProps) {
   const [prefilledValues, setPrefilledValues] = useState<{
     serviceType?: string;
     requirements?: string;
@@ -41,27 +46,6 @@ export default function LabsClient({ portfolioItems }: LabsClientProps) {
       .getElementById("contact-form")
       ?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const services = [
-    {
-      title: "SEO Optimization",
-      description:
-        "Improve your search rankings and drive organic traffic to your website.",
-      icon: BarChart,
-    },
-    {
-      title: "Social Media Marketing",
-      description:
-        "Engage your audience and build brand loyalty across all major platforms.",
-      icon: Share2,
-    },
-    {
-      title: "Web Development",
-      description:
-        "Custom, high-performance websites designed to convert visitors into customers.",
-      icon: Globe,
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
@@ -99,65 +83,35 @@ export default function LabsClient({ portfolioItems }: LabsClientProps) {
         </section>
 
         {/* Services Section */}
-        <section className="py-20 bg-foreground/5">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Our Expertise</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Comprehensive digital solutions designed to elevate your brand
-                and drive results.
-              </p>
-            </div>
+        <ServicesSection
+          services={services}
+          title="Our Expertise"
+          description="Comprehensive digital solutions designed to elevate your brand and drive results."
+        />
 
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              {services.map((service, index) => (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="h-full border-border/50 bg-background/50 backdrop-blur-sm hover:border-green-500/50 transition-colors">
-                    <CardHeader>
-                      <service.icon className="w-10 h-10 text-green-500 mb-4" />
-                      <CardTitle>{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        {service.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            {portfolioItems.length > 0 ? (
-              <PortfolioSection
-                title="Success Stories"
-                description="See how we've helped other businesses achieve their digital goals."
-                items={portfolioItems}
-                onRequestProject={handleRequestProject}
-              />
-            ) : (
-              <div className="py-12">
-                <Empty className="bg-card/20 border-2">
-                  <EmptyHeader>
-                    <EmptyMedia variant={"icon"}>
-                      <BarChart className="w-10 h-10 text-green-500" />
-                    </EmptyMedia>
-                    <EmptyTitle>No Projects Yet</EmptyTitle>
-                    <EmptyDescription>
-                      We haven&apos;t added any labs projects yet. Check back
-                      soon!
-                    </EmptyDescription>
-                  </EmptyHeader>
-                </Empty>
-              </div>
-            )}
+        {/* Portfolio Section */}
+        {portfolioItems.length > 0 ? (
+          <PortfolioSection
+            title="Success Stories"
+            description="See how we've helped other businesses achieve their digital goals."
+            items={portfolioItems}
+            onRequestProject={handleRequestProject}
+          />
+        ) : (
+          <div className="py-12">
+            <Empty className="bg-card/20 border-2">
+              <EmptyHeader>
+                <EmptyMedia variant={"icon"}>
+                  <BarChart className="w-10 h-10 text-green-500" />
+                </EmptyMedia>
+                <EmptyTitle>No Projects Yet</EmptyTitle>
+                <EmptyDescription>
+                  We haven&apos;t added any labs projects yet. Check back soon!
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           </div>
-        </section>
+        )}
 
         {/* Contact Form Section */}
         <section id="contact-form" className="py-20 relative">
@@ -190,13 +144,7 @@ export default function LabsClient({ portfolioItems }: LabsClientProps) {
                 <LeadForm
                   title="Get a Free Consultation"
                   subtitle="Tell us about your business goals."
-                  serviceOptions={[
-                    "SEO & Content Marketing",
-                    "Social Media Management",
-                    "Paid Advertising (PPC)",
-                    "Web Design & Development",
-                    "Full Digital Strategy",
-                  ]}
+                  serviceOptions={services.map((s) => s.name)}
                   placeholderText="Describe your business, current challenges, and what you hope to achieve..."
                   prefilledValues={prefilledValues}
                 />

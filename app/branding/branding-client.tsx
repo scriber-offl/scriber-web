@@ -6,9 +6,8 @@ import { Footer } from "@/components/footer";
 import { Spotlight } from "@/components/backgrounds/spotlight-bg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Palette, PenTool, CheckCircle, Layout } from "lucide-react";
+import { Palette, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PortfolioSection,
   PortfolioItem,
@@ -21,13 +20,17 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
+import { ServicesSection } from "@/components/services-section";
 
 interface BrandingClientProps {
   portfolioItems: PortfolioItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  services: any[];
 }
 
 export default function BrandingClient({
   portfolioItems,
+  services,
 }: BrandingClientProps) {
   const [prefilledValues, setPrefilledValues] = useState<{
     serviceType?: string;
@@ -43,27 +46,6 @@ export default function BrandingClient({
       .getElementById("design-inquiry")
       ?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const services = [
-    {
-      title: "Logo Design",
-      description:
-        "Memorable and timeless logos that capture the essence of your brand.",
-      icon: PenTool,
-    },
-    {
-      title: "Brand Identity",
-      description:
-        "Complete visual identity systems including color palettes, typography, and guidelines.",
-      icon: Palette,
-    },
-    {
-      title: "Marketing Materials",
-      description:
-        "Stunning designs for flyers, brochures, business cards, and social media assets.",
-      icon: Layout,
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
@@ -101,63 +83,36 @@ export default function BrandingClient({
         </section>
 
         {/* Services Section */}
-        <section className="py-20 bg-foreground/5">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Design Services</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                From concept to execution, we deliver design solutions that
-                elevate your brand&apos;s visual presence.
-              </p>
-            </div>
+        <ServicesSection
+          services={services}
+          title="Design Services"
+          description="From concept to execution, we deliver design solutions that elevate your brand's visual presence."
+        />
 
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              {services.map((service, index) => (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="h-full border-border/50 bg-background/50 backdrop-blur-sm hover:border-purple-500/50 transition-colors">
-                    <CardHeader>
-                      <service.icon className="w-10 h-10 text-purple-500 mb-4" />
-                      <CardTitle>{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        {service.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            {portfolioItems.length > 0 ? (
-              <PortfolioSection
-                title="Featured Work"
-                description="A selection of our recent branding and design projects."
-                items={portfolioItems}
-                onRequestProject={handleRequestProject}
-              />
-            ) : (
-              <div className="py-12">
-                <Empty className="bg-card/20 border-2">
-                    <EmptyHeader>
-                    <EmptyMedia variant={"icon"}><Palette className="w-10 h-10 text-purple-500" /></EmptyMedia>
-                    <EmptyTitle>No Projects Yet</EmptyTitle>
-                  </EmptyHeader>
-                    <EmptyDescription>
-                      We haven&apos;t added any branding projects yet. Check
-                      back soon!
-                    </EmptyDescription>
-                </Empty>
-              </div>
-            )}
+        {/* Portfolio Section */}
+        {portfolioItems.length > 0 ? (
+          <PortfolioSection
+            title="Featured Work"
+            description="A selection of our recent branding and design projects."
+            items={portfolioItems}
+            onRequestProject={handleRequestProject}
+          />
+        ) : (
+          <div className="py-12">
+            <Empty className="bg-card/20 border-2">
+              <EmptyHeader>
+                <EmptyMedia variant={"icon"}>
+                  <Palette className="w-10 h-10 text-purple-500" />
+                </EmptyMedia>
+                <EmptyTitle>No Projects Yet</EmptyTitle>
+              </EmptyHeader>
+              <EmptyDescription>
+                We haven&apos;t added any branding projects yet. Check back
+                soon!
+              </EmptyDescription>
+            </Empty>
           </div>
-        </section>
+        )}
 
         {/* Contact Form Section */}
         <section id="design-inquiry" className="py-20 relative">
@@ -190,13 +145,7 @@ export default function BrandingClient({
                 <LeadForm
                   title="Design Inquiry"
                   subtitle="Share your vision with us."
-                  serviceOptions={[
-                    "Logo Design",
-                    "Brand Identity Package",
-                    "Flyers & Posters",
-                    "Social Media Graphics",
-                    "Packaging Design",
-                  ]}
+                  serviceOptions={services.map((s) => s.name)}
                   placeholderText="Describe your brand, target audience, and design preferences..."
                   prefilledValues={prefilledValues}
                 />

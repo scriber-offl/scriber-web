@@ -6,9 +6,8 @@ import { Footer } from "@/components/footer";
 import { Spotlight } from "@/components/backgrounds/spotlight-bg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { BarChart, BookOpen, CheckCircle, Layers, PenTool } from "lucide-react";
+import { BarChart, CheckCircle, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PortfolioSection,
   PortfolioItem,
@@ -21,12 +20,18 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
+import { ServicesSection } from "@/components/services-section";
 
 interface TLMClientProps {
   portfolioItems: PortfolioItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  services: any[];
 }
 
-export default function TLMClient({ portfolioItems }: TLMClientProps) {
+export default function TLMClient({
+  portfolioItems,
+  services,
+}: TLMClientProps) {
   const [prefilledValues, setPrefilledValues] = useState<{
     serviceType?: string;
     requirements?: string;
@@ -41,27 +46,6 @@ export default function TLMClient({ portfolioItems }: TLMClientProps) {
       .getElementById("order-form")
       ?.scrollIntoView({ behavior: "smooth" });
   };
-
-  const services = [
-    {
-      title: "Chart Works",
-      description:
-        "High-quality educational charts for all subjects and levels.",
-      icon: PenTool,
-    },
-    {
-      title: "Working Models",
-      description:
-        "Interactive cardboard models that demonstrate scientific concepts.",
-      icon: Layers,
-    },
-    {
-      title: "Teaching Aids",
-      description:
-        "Custom teaching aids designed to enhance classroom engagement.",
-      icon: BookOpen,
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
@@ -95,64 +79,11 @@ export default function TLMClient({ portfolioItems }: TLMClientProps) {
         </section>
 
         {/* Services/Portfolio Section */}
-        <section className="py-20 bg-foreground/5">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Our Offerings</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                We specialize in creating high-quality teaching and learning
-                materials tailored to your curriculum needs.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              {services.map((service, index) => (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="h-full border-border/50 bg-background/50 backdrop-blur-sm hover:border-blue-500/50 transition-colors">
-                    <CardHeader>
-                      <service.icon className="w-10 h-10 text-blue-500 mb-4" />
-                      <CardTitle>{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        {service.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            {portfolioItems.length > 0 ? (
-              <PortfolioSection
-                title="Recent Projects"
-                description="Explore some of the teaching aids we've created for other educators."
-                items={portfolioItems}
-                onRequestProject={handleRequestProject}
-              />
-            ) : (
-              <div className="py-12">
-                <Empty className="bg-card/20 border-2">
-                  <EmptyHeader>
-                    <EmptyMedia variant={"icon"}>
-                      <BarChart className="w-10 h-10 text-blue-500" />
-                    </EmptyMedia>
-                  </EmptyHeader>
-                  <EmptyTitle>No Projects Yet</EmptyTitle>
-                  <EmptyDescription>
-                    We haven&apos;t added any TLM projects yet. Check back soon!
-                  </EmptyDescription>
-                </Empty>
-              </div>
-            )}
-          </div>
-        </section>
+        <ServicesSection
+          services={services}
+          title="Our Offerings"
+          description="We specialize in creating high-quality teaching and learning materials tailored to your curriculum needs."
+        />
 
         {/* Order Form Section */}
         <section id="order-form" className="py-20 relative">
@@ -185,13 +116,7 @@ export default function TLMClient({ portfolioItems }: TLMClientProps) {
                 <LeadForm
                   title="Order Form"
                   subtitle="Fill in the details below to get started."
-                  serviceOptions={[
-                    "Chart Work",
-                    "Working Model",
-                    "Static Model",
-                    "Flash Cards",
-                    "Other Teaching Aid",
-                  ]}
+                  serviceOptions={services.map((s) => s.name)}
                   placeholderText="Describe the topic, subject, and specific requirements for your model or chart..."
                   prefilledValues={prefilledValues}
                 />
@@ -199,6 +124,30 @@ export default function TLMClient({ portfolioItems }: TLMClientProps) {
             </div>
           </div>
         </section>
+
+        {/* Portfolio Section */}
+        {portfolioItems.length > 0 ? (
+          <PortfolioSection
+            title="Recent Projects"
+            description="Explore some of the teaching aids we've created for other educators."
+            items={portfolioItems}
+            onRequestProject={handleRequestProject}
+          />
+        ) : (
+          <div className="py-12">
+            <Empty className="bg-card/20 border-2">
+              <EmptyHeader>
+                <EmptyMedia variant={"icon"}>
+                  <BarChart className="w-10 h-10 text-blue-500" />
+                </EmptyMedia>
+              </EmptyHeader>
+              <EmptyTitle>No Projects Yet</EmptyTitle>
+              <EmptyDescription>
+                We haven&apos;t added any TLM projects yet. Check back soon!
+              </EmptyDescription>
+            </Empty>
+          </div>
+        )}
       </main>
       <Footer />
     </div>

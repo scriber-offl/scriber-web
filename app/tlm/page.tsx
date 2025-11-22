@@ -1,4 +1,5 @@
 import { getPortfolioItemsByStream } from "@/actions/portfolio";
+import { getServices } from "@/actions/services";
 import TLMClient from "./tlm-client";
 import { Metadata } from "next";
 
@@ -18,12 +19,24 @@ export const metadata: Metadata = {
 };
 
 export default async function TLMPage() {
-  const portfolioItems = await getPortfolioItemsByStream("tlm");
+  const [portfolioItems, services] = await Promise.all([
+    getPortfolioItemsByStream("tlm"),
+    getServices("tlm"),
+  ]);
 
   const serializedItems = portfolioItems.map((item) => ({
     ...item,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
   }));
-  return <TLMClient portfolioItems={serializedItems} />;
+
+  const serializedServices = services.map((service) => ({
+    ...service,
+    createdAt: service.createdAt.toISOString(),
+    updatedAt: service.updatedAt.toISOString(),
+  }));
+
+  return (
+    <TLMClient portfolioItems={serializedItems} services={serializedServices} />
+  );
 }
