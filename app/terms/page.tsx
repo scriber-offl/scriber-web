@@ -19,7 +19,7 @@ export default function TermsPage() {
         </CardHeader>
         <CardContent className="prose dark:prose-invert max-w-none space-y-6">
           <p className="text-muted-foreground text-center">
-            Last updated: {new Date().toLocaleDateString()}
+            Last updated: November 23, 2025
           </p>
 
           <section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,6 +47,95 @@ export interface PortfolioItem {
   serviceType: string; // To map to form
 }
 
+function ReviewStack({ reviews }: { reviews: PortfolioItem["reviews"] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (reviews.length <= 1) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % reviews.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [reviews.length]);
+
+  if (reviews.length === 0) {
+    return (
+      <div className="h-[200px] flex items-center justify-center border border-dashed rounded-lg bg-muted/30">
+        <p className="text-muted-foreground text-sm italic">No reviews yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-[140px] w-full flex items-center justify-center">
+      {reviews.map((review, i) => {
+        const length = reviews.length;
+        const offset = (i - index + length) % length;
+
+        // Show top 3 cards and the one leaving
+        if (offset > 2 && offset !== length - 1) return null;
+
+        let zIndex = 3 - offset;
+        let scale = 1 - offset * 0.05;
+        let y = offset * 10;
+        let opacity = 1 - offset * 0.2;
+
+        // The card that is leaving (moving to back)
+        if (length > 1 && offset === length - 1) {
+          zIndex = 0;
+          scale = 0.9;
+          y = 20;
+          opacity = 0;
+        }
+
+        return (
+          <motion.div
+            key={`${review.userId}-${i}`}
+            className="absolute w-full bg-card p-6 rounded-xl border shadow-lg flex flex-col gap-3"
+            initial={false}
+            animate={{
+              zIndex,
+              scale,
+              y,
+              opacity,
+            }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            style={{
+              transformOrigin: "top center",
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm truncate">
+                  {review.user}
+                </div>
+                <div className="flex">
+                  {[...Array(5)].map((_, starI) => (
+                    <Star
+                      key={starI}
+                      className={`w-3 h-3 ${
+                        starI < review.rating
+                          ? "text-yellow-500 fill-yellow-500"
+                          : "text-muted-foreground/30"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="text-muted-foreground text-sm italic line-clamp-3">
+              &quot;{review.comment}&quot;
+            </p>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 interface PortfolioSectionProps {
   title?: string;
   description?: string;
@@ -91,7 +180,7 @@ export function PortfolioSection({
   };
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-muted">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">{title}</h2>
@@ -119,7 +208,7 @@ export function PortfolioSection({
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   layout
                 >
-                  <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-border/50">
+                  <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow border-border/50 pt-0">
                     <div className="h-48 bg-muted relative overflow-hidden group">
                       {item.image && item.image !== "/placeholder.jpg" ? (
                         <img
@@ -189,7 +278,7 @@ export function PortfolioSection({
                                 </div>
                               </div>
 
-                              <div className="space-y-6 md:col-span-2 flex flex-col justify-center">
+                              <div className="space-y-2 md:col-span-2 flex flex-col justify-center">
                                 <div>
                                   <h4 className="font-semibold mb-2 text-lg">
                                     About the Project
@@ -200,47 +289,10 @@ export function PortfolioSection({
                                 </div>
 
                                 <div>
-                                  <h4 className="font-semibold mb-3 text-lg">
+                                  <h4 className="font-semibold mb-4 text-lg">
                                     Client Reviews
                                   </h4>
-                                  <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-                                    {item.reviews.length > 0 ? (
-                                      item.reviews.map((review, idx) => (
-                                        <div
-                                          key={idx}
-                                          className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
-                                        >
-                                          <div className="flex items-center gap-2 mb-2">
-                                            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                              <User className="w-3 h-3 text-primary" />
-                                            </div>
-                                            <span className="font-medium">
-                                              {review.user}
-                                            </span>
-                                            <div className="flex ml-auto">
-                                              {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                  key={i}
-                                                  className={`w-3 h-3 ${
-                                                    i < review.rating
-                                                      ? "text-yellow-500 fill-yellow-500"
-                                                      : "text-muted-foreground"
-                                                  }`}
-                                                />
-                                              ))}
-                                            </div>
-                                          </div>
-                                          <p className="text-muted-foreground italic">
-                                            &quot;{review.comment}&quot;
-                                          </p>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <p className="text-muted-foreground text-sm italic">
-                                        No reviews yet.
-                                      </p>
-                                    )}
-                                  </div>
+                                  <ReviewStack reviews={item.reviews} />
                                 </div>
 
                                 {isAdmin && (
@@ -428,44 +480,7 @@ export function PortfolioSection({
                                 <h4 className="font-semibold mb-3 text-lg">
                                   Client Reviews
                                 </h4>
-                                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-                                  {item.reviews.length > 0 ? (
-                                    item.reviews.map((review, idx) => (
-                                      <div
-                                        key={idx}
-                                        className="bg-muted/50 p-4 rounded-lg text-sm border border-border/50"
-                                      >
-                                        <div className="flex items-center gap-2 mb-2">
-                                          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                            <User className="w-3 h-3 text-primary" />
-                                          </div>
-                                          <span className="font-medium">
-                                            {review.user}
-                                          </span>
-                                          <div className="flex ml-auto">
-                                            {[...Array(5)].map((_, i) => (
-                                              <Star
-                                                key={i}
-                                                className={`w-3 h-3 ${
-                                                  i < review.rating
-                                                    ? "text-yellow-500 fill-yellow-500"
-                                                    : "text-muted-foreground"
-                                                }`}
-                                              />
-                                            ))}
-                                          </div>
-                                        </div>
-                                        <p className="text-muted-foreground italic">
-                                          &quot;{review.comment}&quot;
-                                        </p>
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <p className="text-muted-foreground text-sm italic">
-                                      No reviews yet.
-                                    </p>
-                                  )}
-                                </div>
+                                <ReviewStack reviews={item.reviews} />
                               </div>
 
                               {isAdmin && (

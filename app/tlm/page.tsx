@@ -1,7 +1,12 @@
-import { getPortfolioItemsByStream } from "@/actions/portfolio";
-import { getServices } from "@/actions/services";
+import { getPortfolioItemsByStream, getServices } from "@/lib/queries";
 import TLMClient from "./tlm-client";
 import { Metadata } from "next";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { TLMHero } from "./tlm-hero";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "Scriber TLM - Teaching & Learning Materials Marketplace",
@@ -18,7 +23,8 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function TLMPage() {
+async function TLMData() {
+  await connection();
   const [portfolioItems, services] = await Promise.all([
     getPortfolioItemsByStream("tlm"),
     getServices("tlm"),
@@ -38,5 +44,24 @@ export default async function TLMPage() {
 
   return (
     <TLMClient portfolioItems={serializedItems} services={serializedServices} />
+  );
+}
+
+export default async function TLMPage() {
+  return (
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      <Header />
+      <TLMHero />
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        }
+      >
+        <TLMData />
+      </Suspense>
+      <Footer />
+    </div>
   );
 }

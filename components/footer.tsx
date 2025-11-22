@@ -5,7 +5,12 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  // Use a fixed year for server rendering to avoid hydration mismatch
+  // The client will update it if needed, but for copyright, the build year or current year is usually fine.
+  // To be strictly correct with hydration, we can use a suppressHydrationWarning on the element
+  // or just use a static year if we don't care about auto-updating on Jan 1st without a rebuild.
+  // Let's use a simple approach that is safe.
+  const currentYear = 2025;
 
   return (
     <footer className="bg-background border-t border-border text-foreground relative overflow-hidden">
@@ -110,7 +115,7 @@ export function Footer() {
           <p className="text-sm text-muted-foreground">
             © {currentYear} The Scriber Company.
           </p>
-            <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Built & Maintained by{" "}
             <Link
               href="https://www.johanan.in"
@@ -120,7 +125,7 @@ export function Footer() {
             >
               Johanan S. A.
             </Link>
-            </p>
+          </p>
         </div>
       </div>
 

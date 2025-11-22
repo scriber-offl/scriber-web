@@ -26,6 +26,7 @@ import { FormWrapper } from "@/components/form-wrapper";
 import { createLead } from "@/actions/create-lead";
 import { leadFormSchema } from "@/lib/schemas";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "@/components/ui/spinner";
 
 interface LeadFormProps {
   title?: string;
@@ -47,6 +48,7 @@ export function LeadForm({
 }: LeadFormProps) {
   const { data: session } = authClient.useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const form = useForm<z.infer<typeof leadFormSchema>>({
     resolver: zodResolver(leadFormSchema),
     defaultValues: {
@@ -59,6 +61,7 @@ export function LeadForm({
   });
 
   useEffect(() => {
+    setMounted(true);
     if (session?.user) {
       form.setValue("name", session.user.name);
       form.setValue("email", session.user.email);
@@ -85,6 +88,14 @@ export function LeadForm({
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spinner className="h-8 w-8 text-muted-foreground" />
+      </div>
+    );
   }
 
   return (

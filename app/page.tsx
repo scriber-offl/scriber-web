@@ -1,4 +1,3 @@
-"use client";
 import { Header } from "@/components/header";
 import { ModernHero } from "@/components/modern-hero";
 import { ModernBusinessSection } from "@/components/modern-business-section";

@@ -4,13 +4,10 @@ import { motion } from "framer-motion";
 import { Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 import { ContactForm } from "@/components/contact-form";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 
 export default function ContactClient() {
   return (
     <>
-      <Header />
       <div className="relative min-h-screen w-full flex flex-col overflow-hidden bg-background text-foreground pt-20">
         {/* Modern Grid Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
@@ -108,7 +105,6 @@ export default function ContactClient() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

@@ -6,6 +6,7 @@ import { desc, eq, and } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { del } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
 async function checkAdmin() {
   const session = await auth.api.getSession({
@@ -15,11 +16,6 @@ async function checkAdmin() {
   if (!session || session.user.role !== "admin") {
     throw new Error("Unauthorized");
   }
-}
-
-export async function getPortfolioItems() {
-  // Publicly accessible
-  return await db.select().from(portfolio).orderBy(desc(portfolio.createdAt));
 }
 
 export async function getPortfolioItem(id: string) {
@@ -61,6 +57,12 @@ export async function createPortfolioItem(data: typeof portfolio.$inferInsert) {
     .insert(portfolio)
     .values(data)
     .returning({ id: portfolio.id });
+
+  revalidatePath("/admin");
+  revalidatePath("/tlm");
+  revalidatePath("/branding");
+  revalidatePath("/labs");
+
   return inserted.id;
 }
 
@@ -70,6 +72,11 @@ export async function updatePortfolioItem(
 ) {
   await checkAdmin();
   await db.update(portfolio).set(data).where(eq(portfolio.id, id));
+
+  revalidatePath("/admin");
+  revalidatePath("/tlm");
+  revalidatePath("/branding");
+  revalidatePath("/labs");
 }
 
 export async function deletePortfolioItem(id: string) {
@@ -79,6 +86,11 @@ export async function deletePortfolioItem(id: string) {
     await del(item.image);
   }
   await db.delete(portfolio).where(eq(portfolio.id, id));
+
+  revalidatePath("/admin");
+  revalidatePath("/tlm");
+  revalidatePath("/branding");
+  revalidatePath("/labs");
 }
 
 export async function deletePortfolioImage(url: string) {
@@ -151,44 +163,4 @@ export async function getAllReviews() {
     .leftJoin(portfolio, eq(reviews.portfolioId, portfolio.id))
     .leftJoin(user, eq(reviews.userId, user.id))
     .orderBy(desc(reviews.createdAt));
-}
-
-export async function getPortfolioItemsByStream(stream: string) {
-  const items = await db
-    .select()
-    .from(portfolio)
-    .where(eq(portfolio.stream, stream))
-    .orderBy(desc(portfolio.createdAt));
-
-  const itemsWithReviews = await Promise.all(
-    items.map(async (item) => {
-      const itemReviews = await db
-        .select({
-          user: user.name,
-          userId: reviews.userId,
-          comment: reviews.comment,
-          rating: reviews.rating,
-        })
-        .from(reviews)
-        .leftJoin(user, eq(reviews.userId, user.id))
-        .where(eq(reviews.portfolioId, item.id));
-
-      const totalRating = itemReviews.reduce((acc, r) => acc + r.rating, 0);
-      const averageRating =
-        itemReviews.length > 0 ? totalRating / itemReviews.length : 0;
-
-      return {
-        ...item,
-        rating: parseFloat(averageRating.toFixed(1)),
-        reviews: itemReviews.map((r) => ({
-          user: r.user || "Anonymous",
-          userId: r.userId,
-          comment: r.comment,
-          rating: r.rating,
-        })),
-      };
-    })
-  );
-
-  return itemsWithReviews;
 }

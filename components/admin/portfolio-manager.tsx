@@ -84,8 +84,8 @@ export function PortfolioManager({
     <div className="space-y-4 bg-card/20 p-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <Card key={item.id} className="flex flex-col">
-            <div className="aspect-video bg-muted relative overflow-hidden rounded-t-lg flex items-center justify-center">
+          <Card key={item.id} className="flex flex-col pt-0 overflow-hidden">
+            <div className="aspect-video bg-muted relative overflow-hidden flex items-center justify-center">
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

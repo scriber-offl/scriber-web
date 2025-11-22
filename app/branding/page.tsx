@@ -1,7 +1,12 @@
-import { getPortfolioItemsByStream } from "@/actions/portfolio";
-import { getServices } from "@/actions/services";
+import { getPortfolioItemsByStream, getServices } from "@/lib/queries";
 import BrandingClient from "./branding-client";
 import { Metadata } from "next";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { BrandingHero } from "./branding-hero";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "Scriber Branding - Brand Design & Identity",
@@ -17,7 +22,8 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function BrandingPage() {
+async function BrandingData() {
+  await connection();
   const [portfolioItems, services] = await Promise.all([
     getPortfolioItemsByStream("branding"),
     getServices("branding"),
@@ -40,5 +46,24 @@ export default async function BrandingPage() {
       portfolioItems={serializedItems}
       services={serializedServices}
     />
+  );
+}
+
+export default function BrandingPage() {
+  return (
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      <Header />
+      <BrandingHero />
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        }
+      >
+        <BrandingData />
+      </Suspense>
+      <Footer />
+    </div>
   );
 }

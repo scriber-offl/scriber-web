@@ -1,7 +1,12 @@
-import { getPortfolioItemsByStream } from "@/actions/portfolio";
-import { getServices } from "@/actions/services";
+import { getPortfolioItemsByStream, getServices } from "@/lib/queries";
 import LabsClient from "./labs-client";
 import { Metadata } from "next";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { LabsHero } from "./labs-hero";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
   title: "ScriberLabs - Digital Marketing & SEO",
@@ -18,7 +23,8 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function LabsPage() {
+async function LabsData() {
+  await connection();
   const [portfolioItems, services] = await Promise.all([
     getPortfolioItemsByStream("labs"),
     getServices("labs"),
@@ -41,5 +47,24 @@ export default async function LabsPage() {
       portfolioItems={serializedItems}
       services={serializedServices}
     />
+  );
+}
+
+export default async function LabsPage() {
+  return (
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      <Header />
+      <LabsHero />
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        }
+      >
+        <LabsData />
+      </Suspense>
+      <Footer />
+    </div>
   );
 }

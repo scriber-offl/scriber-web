@@ -3,7 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -36,7 +36,7 @@ export function FormWrapper({
   if (isPending) {
     return (
       <div className="flex justify-center items-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   }

@@ -23,12 +23,14 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Service {
   id: string;
   name: string;
   description: string | null;
   stream: string;
+  image: string | null;
 }
 
 interface ServicesSectionProps {
@@ -95,12 +97,25 @@ export function ServicesSection({
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/50 transition-colors">
+                <Card className="h-full border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/50 transition-colors overflow-hidden flex flex-col pt-0">
+                  <div className="relative w-full aspect-video bg-muted">
+                    {service.image ? (
+                      <Image
+                        src={service.image}
+                        alt={service.name}
+                        fill
+                        className="object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-muted/50">
+                        <Icon className="w-12 h-12 text-muted-foreground/50" />
+                      </div>
+                    )}
+                  </div>
                   <CardHeader>
-                    <Icon className="w-10 h-10 text-primary mb-4" />
                     <CardTitle>{service.name}</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-grow">
                     <p className="text-muted-foreground">
                       {service.description}
                     </p>
