@@ -61,7 +61,7 @@ export function Footer() {
                 <Mail className="w-6 h-6" />
               </Link>
               <Link
-                href="https://www.instagram.com/scriberoffial/"
+                href="https://www.instagram.com/scriberofficial/"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Instagram"
               >
