@@ -3,8 +3,8 @@ import { Geist, Geist_Mono, Unlock } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: "%s | Scriber",
   },
   description:
-    "Scriber: TLM Marketplace for educational materials, ScriberLabs for digital marketing, and Scriber Branding for complete business branding solutions.",
+    "Scriber: TLM Marketplace for educational materials, and Scriber Branding for complete business branding and digital marketing solutions.",
   keywords: [
     "Scriber",
     "TLM",
@@ -37,7 +37,6 @@ export const metadata: Metadata = {
     "Digital Marketing",
     "Branding",
     "Educational Marketplace",
-    "ScriberLabs",
     "Scriber Branding",
   ],
   openGraph: {
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Scriber - Digital Solutions & Educational Marketplace",
     description:
-      "Scriber: TLM Marketplace for educational materials, ScriberLabs for digital marketing, and Scriber Branding for complete business branding solutions.",
+      "Scriber: TLM Marketplace for educational materials, and Scriber Branding for complete business branding and digital marketing solutions.",
     images: ["/scriber-og.png"],
   },
 };

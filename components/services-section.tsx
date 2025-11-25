@@ -40,9 +40,13 @@ interface ServicesSectionProps {
 }
 
 const ICON_SETS = {
-  branding: [Palette, PenTool, Layout, Type, ImageIcon, Box],
-  tlm: [BookOpen, Layers, Box, Briefcase, PenTool],
-  labs: [
+  branding: [
+    Palette,
+    PenTool,
+    Layout,
+    Type,
+    ImageIcon,
+    Box,
     BarChart,
     Globe,
     Share2,
@@ -54,6 +58,7 @@ const ICON_SETS = {
     Mail,
     Video,
   ],
+  tlm: [BookOpen, Layers, Box, Briefcase, PenTool],
   default: [Layers, PenTool, Layout],
 };
 

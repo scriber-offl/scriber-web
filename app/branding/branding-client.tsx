@@ -60,19 +60,19 @@ export default function BrandingClient({
             <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Let&apos;s Create Something Amazing
+                  Let&apos;s Create & Grow Together
                 </h2>
                 <p className="text-muted-foreground text-lg mb-8">
-                  Whether you need a new logo or a complete brand overhaul,
-                  we&apos;re here to bring your vision to life. Tell us about
-                  your project.
+                  Whether you need a new brand identity, a digital marketing
+                  strategy, or both, we&apos;re here to help you succeed. Tell
+                  us about your project.
                 </p>
                 <ul className="space-y-4">
                   {[
                     "Unique, custom designs",
+                    "Data-driven marketing strategies",
                     "Consistent brand language",
-                    "Print & digital ready files",
-                    "Unlimited revisions (on select packages)",
+                    "Transparent reporting & results",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-purple-500" />
@@ -83,10 +83,10 @@ export default function BrandingClient({
               </div>
               <div>
                 <LeadForm
-                  title="Design Inquiry"
+                  title="Start Your Project"
                   subtitle="Share your vision with us."
                   serviceOptions={services.map((s) => s.name)}
-                  placeholderText="Describe your brand, target audience, and design preferences..."
+                  placeholderText="Describe your brand, business goals, and what you hope to achieve..."
                   prefilledValues={prefilledValues}
                 />
               </div>

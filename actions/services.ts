@@ -21,7 +21,6 @@ export async function createService(data: {
     revalidatePath("/contact");
     revalidatePath("/branding");
     revalidatePath("/tlm");
-    revalidatePath("/labs");
     return {
       success: true,
       message: "Service created successfully",
@@ -48,7 +47,6 @@ export async function updateService(
     revalidatePath("/contact");
     revalidatePath("/branding");
     revalidatePath("/tlm");
-    revalidatePath("/labs");
     return { success: true, message: "Service updated successfully" };
   } catch (error) {
     console.error("Failed to update service:", error);
@@ -70,7 +68,6 @@ export async function deleteService(id: string) {
     revalidatePath("/contact");
     revalidatePath("/branding");
     revalidatePath("/tlm");
-    revalidatePath("/labs");
     return { success: true, message: "Service deleted successfully" };
   } catch (error) {
     console.error("Failed to delete service:", error);

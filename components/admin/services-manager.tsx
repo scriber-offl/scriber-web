@@ -266,7 +266,6 @@ export function ServicesManager({ services }: { services: Service[] }) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="branding">Branding</SelectItem>
-                    <SelectItem value="labs">Labs</SelectItem>
                     <SelectItem value="tlm">TLM</SelectItem>
                   </SelectContent>
                 </Select>

@@ -9,16 +9,17 @@ import { Spinner } from "@/components/ui/spinner";
 import { connection } from "next/server";
 
 export const metadata: Metadata = {
-  title: "Scriber Branding - Brand Design & Identity",
+  title: "Scriber Branding - Brand Design & Digital Marketing",
   description:
-    "Scriber Branding helps create memorable brands that resonate with audiences. From logo design to complete brand identity and marketing materials.",
+    "Scriber Branding helps create memorable brands and grow them online. From logo design to digital marketing strategies.",
   keywords: [
     "Scriber Branding",
     "Brand Design",
     "Logo Design",
     "Brand Identity",
-    "Marketing Materials",
-    "Corporate Branding",
+    "Digital Marketing",
+    "SEO",
+    "Social Media Marketing",
   ],
 };
 

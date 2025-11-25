@@ -61,7 +61,6 @@ export async function createPortfolioItem(data: typeof portfolio.$inferInsert) {
   revalidatePath("/admin");
   revalidatePath("/tlm");
   revalidatePath("/branding");
-  revalidatePath("/labs");
 
   return inserted.id;
 }
@@ -76,7 +75,6 @@ export async function updatePortfolioItem(
   revalidatePath("/admin");
   revalidatePath("/tlm");
   revalidatePath("/branding");
-  revalidatePath("/labs");
 }
 
 export async function deletePortfolioItem(id: string) {
@@ -90,7 +88,6 @@ export async function deletePortfolioItem(id: string) {
   revalidatePath("/admin");
   revalidatePath("/tlm");
   revalidatePath("/branding");
-  revalidatePath("/labs");
 }
 
 export async function deletePortfolioImage(url: string) {

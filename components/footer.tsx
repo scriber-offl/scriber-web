@@ -93,15 +93,6 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/labs"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
-                >
-                  ScriberLabs
-                  <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/branding"
                   className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
                 >

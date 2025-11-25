@@ -9,8 +9,8 @@ export function AuthLoading() {
       disabled
       className="uppercase tracking-wider text-xs font-bold"
     >
-      <Spinner className="mr-2 h-3 w-3" />
-      Retrieving Session
+      <Spinner className="h-3 w-3 sm:mr-2" />
+      <span className="hidden sm:inline">Retrieving Session</span>
     </Button>
   );
 }

@@ -35,54 +35,9 @@ const businesses = [
     ),
   },
   {
-    title: "ScriberLabs",
-    description: "Digital marketing strategies to grow your business online.",
-    icon: TrendingUp,
-    href: "/labs",
-    pattern: (
-      <svg
-        className="absolute right-0 top-0 h-full w-full opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <pattern
-          id="lines-labs"
-          width="10"
-          height="10"
-          patternUnits="userSpaceOnUse"
-        >
-          <line
-            x1="0"
-            y1="10"
-            x2="10"
-            y2="0"
-            stroke="currentColor"
-            strokeWidth="0.5"
-          />
-          <line
-            x1="0"
-            y1="5"
-            x2="5"
-            y2="0"
-            stroke="currentColor"
-            strokeWidth="0.5"
-          />
-          <line
-            x1="5"
-            y1="10"
-            x2="10"
-            y2="5"
-            stroke="currentColor"
-            strokeWidth="0.5"
-          />
-        </pattern>
-        <rect width="100" height="100" fill="url(#lines-labs)" />
-      </svg>
-    ),
-  },
-  {
     title: "Scriber Branding",
-    description: "Creating memorable brand identities and designs.",
+    description:
+      "Creating memorable brand identities and digital marketing strategies.",
     icon: Palette,
     href: "/branding",
     pattern: (
@@ -147,7 +102,7 @@ export function ModernBusinessSection() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-l border-t border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-l border-t border-border">
           {businesses.map((business, index) => (
             <motion.div
               key={business.title}

@@ -252,7 +252,6 @@ export function PortfolioForm({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="branding">Branding</SelectItem>
-                  <SelectItem value="labs">Labs</SelectItem>
                   <SelectItem value="tlm">TLM</SelectItem>
                 </SelectContent>
               </Select>

@@ -1,15 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RefreshCw, LogOut, Menu } from "lucide-react";
+import { RefreshCw, LogOut, Menu, Home } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/theme/toggle";
+import { SceneToggle } from "@/components/theme/scene-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -40,6 +44,16 @@ export function AdminHeader() {
         </p>
       </div>
       <div className="flex items-center gap-4">
+        <Button
+          variant="outline"
+          size="icon"
+          asChild
+          className="hidden md:flex"
+        >
+          <Link href="/">
+            <Home className="h-4 w-4" />
+          </Link>
+        </Button>
         <Button variant="outline" size="icon" onClick={handleRefresh}>
           <RefreshCw className="h-4 w-4" />
         </Button>
@@ -62,15 +76,23 @@ export function AdminHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <div className="flex items-center justify-between p-2 gap-4">
-                <span className="text-sm font-medium">Theme</span>
-                <ThemeToggle />
-              </div>
+              <DropdownMenuItem asChild>
+                <Link href="/" className="cursor-pointer">
+                  <Home className="mr-2 h-4 w-4" />
+                  Home
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-secondary" />
+              <DropdownMenuLabel>Theme</DropdownMenuLabel>
+              <DropdownMenuItem className="p-0 focus:bg-transparent">
+                <SceneToggle />
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-secondary" />
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className="text-destructive focus:text-destructive cursor-pointer"
+                className="bg-destructive text-destructive-foreground focus:bg-destructive/90 focus:text-destructive-foreground cursor-pointer mt-2"
               >
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="mr-2 h-4 w-4 text-primary" />
                 Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>

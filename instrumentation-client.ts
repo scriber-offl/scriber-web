@@ -14,10 +14,6 @@ initBotId({
       method: "POST",
     },
     {
-      path: "/labs",
-      method: "POST",
-    },
-    {
       path: "/tlm",
       method: "POST",
     },

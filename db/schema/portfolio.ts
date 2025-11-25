@@ -12,7 +12,7 @@ export const portfolio = pgTable("portfolio", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
   category: text("category").notNull(), // e.g., "Brand Identity", "Logo Design"
-  stream: text("stream").notNull(), // "branding", "labs", "tlm"
+  stream: text("stream").notNull(), // "branding", "tlm"
   image: text("image").notNull(),
   description: text("description").notNull(),
   fullDescription: text("full_description").notNull(),

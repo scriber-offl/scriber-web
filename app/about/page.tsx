@@ -4,13 +4,12 @@ import AboutClient from "./about-client";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about Scriber's mission to empower businesses and educators through innovation, design, and strategy. Discover our specialized companies: Scriber TLM, ScriberLabs, and Scriber Branding.",
+    "Learn about Scriber's mission to empower businesses and educators through innovation, design, and strategy. Discover our specialized companies: Scriber TLM and Scriber Branding.",
   keywords: [
     "About Scriber",
     "Scriber Mission",
     "Scriber Values",
     "Scriber TLM",
-    "ScriberLabs",
     "Scriber Branding",
     "Education Technology",
     "Digital Marketing Agency",
