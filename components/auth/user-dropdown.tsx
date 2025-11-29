@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,13 +12,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-
 interface UserDropdownProps {
   session: {
     user: {
       name: string;
       email: string;
       image?: string | null;
+      role?: string | null;
     };
   };
 }
@@ -64,6 +64,17 @@ export function UserDropdown({ session }: UserDropdownProps) {
           </div>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        {session.user.role === "admin" && (
+          <>
+            <DropdownMenuItem asChild>
+              <a href="/admin" className="w-full cursor-pointer">
+                <ShieldCheck className="h-4 w-4" />
+                <span>Admin Dashboard</span>
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem onClick={handleSignOut}>
           <Button variant={"destructive"} className="w-full">
             <LogOut className="mr-0 h-4 w-4 text-red-100" />

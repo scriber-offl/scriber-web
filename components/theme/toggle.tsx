@@ -6,7 +6,6 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
 
 const useThemeCycle = () => {
   const { theme, setTheme } = useTheme();
@@ -92,7 +91,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   }, []);
 
   const getThemeIcon = () => {
-    if (!mounted) return <Loader2 className="animate-spin" size={16} />;
+    if (!mounted) return null;
 
     return (
       <AnimatePresence mode="wait" initial={false}>

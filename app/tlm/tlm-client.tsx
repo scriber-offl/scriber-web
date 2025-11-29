@@ -8,16 +8,20 @@ import {
   PortfolioItem,
 } from "@/components/portfolio-section";
 import { ServicesSection } from "@/components/services-section";
+import { WholesaleSection } from "@/components/tlm/wholesale-section";
 
 interface TLMClientProps {
   portfolioItems: PortfolioItem[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   services: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  shopProducts: any[];
 }
 
 export default function TLMClient({
   portfolioItems,
   services,
+  shopProducts,
 }: TLMClientProps) {
   const [prefilledValues, setPrefilledValues] = useState<{
     serviceType?: string;
@@ -46,6 +50,8 @@ export default function TLMClient({
             onRequestProject={handleRequestProject}
           />
         )}
+
+        <WholesaleSection products={shopProducts} />
 
         {/* Services/Portfolio Section */}
         <ServicesSection

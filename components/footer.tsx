@@ -30,7 +30,7 @@ export function Footer() {
     <footer className="bg-background border-t border-border text-foreground relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 pt-24 pb-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-24">
-          <div className="md:col-span-5 space-y-8">
+          <div className="md:col-span-5 space-y-6">
             <Link href="/" className="inline-block">
               <Image
                 src="/scriber-logo.svg"
@@ -40,9 +40,9 @@ export function Footer() {
                 className="dark:invert-0 invert"
               />
             </Link>
-            <p className="text-muted-foreground text-xl leading-relaxed font-light max-w-md">
-              Empowering businesses and educators through innovation, design,
-              and strategy. Building the future of digital excellence.
+            <p className="text-muted-foreground font-light max-w-xs">
+              Building teaching learning materials and delivering full scale
+              digital marketing.
             </p>
             <div className="flex gap-4">
               <Link
@@ -152,6 +152,15 @@ export function Footer() {
               className="hover:text-foreground transition-colors underline underline-offset-2"
             >
               Johanan S. A.
+            </Link>{" "}
+            for {" "}
+            <Link
+              href="https://www.rheniuus.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors underline underline-offset-2"
+            >
+              J. M. Rhenius
             </Link>
           </p>
         </div>
@@ -159,7 +168,7 @@ export function Footer() {
 
       {/* Massive Footer Text - Polished */}
       <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden pointer-events-none select-none leading-none z-0 flex justify-center">
-        <h1 className="text-[24vw] font-bold tracking-tighter bg-gradient-to-b from-foreground/[0.01] to-foreground/[0.08] dark:from-foreground/[0.01] dark:via-foreground/[0.04] dark:to-foreground/[0.09] bg-clip-text text-transparent translate-y-[35%]">
+        <h1 className="text-[18vw] font-bold tracking-tighter bg-gradient-to-b from-foreground/[0.01] to-foreground/[0.08] dark:from-foreground/[0.01] dark:via-foreground/[0.04] dark:to-foreground/[0.09] bg-clip-text text-transparent translate-y-[35%]">
           SCRIBER
         </h1>
       </div>

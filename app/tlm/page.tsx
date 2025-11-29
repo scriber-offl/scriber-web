@@ -1,4 +1,5 @@
 import { getPortfolioItemsByStream, getServices } from "@/lib/queries";
+import { getShopProducts } from "@/actions/shop";
 import TLMClient from "./tlm-client";
 import { Metadata } from "next";
 import { Header } from "@/components/header";
@@ -25,9 +26,10 @@ export const metadata: Metadata = {
 
 async function TLMData() {
   await connection();
-  const [portfolioItems, services] = await Promise.all([
+  const [portfolioItems, services, shopProducts] = await Promise.all([
     getPortfolioItemsByStream("tlm"),
     getServices("tlm"),
+    getShopProducts(),
   ]);
 
   const serializedItems = portfolioItems.map((item) => ({
@@ -42,8 +44,18 @@ async function TLMData() {
     updatedAt: service.updatedAt.toISOString(),
   }));
 
+  const serializedProducts = shopProducts.map((product) => ({
+    ...product,
+    createdAt: product.createdAt.toISOString(),
+    updatedAt: product.updatedAt.toISOString(),
+  }));
+
   return (
-    <TLMClient portfolioItems={serializedItems} services={serializedServices} />
+    <TLMClient
+      portfolioItems={serializedItems}
+      services={serializedServices}
+      shopProducts={serializedProducts}
+    />
   );
 }
 

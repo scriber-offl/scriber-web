@@ -80,7 +80,7 @@ export function SignInCard({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto border-none shadow-none">
+    <Card className="w-full max-w-md mx-auto border-none shadow-none bg-background">
       <CardHeader className="text-center px-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

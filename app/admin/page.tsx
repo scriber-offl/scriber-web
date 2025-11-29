@@ -1,88 +1,49 @@
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { AdminDashboard } from "@/components/admin/dashboard";
-import { AdminHeader } from "@/components/admin/admin-header";
-import { ForbiddenView } from "@/components/admin/forbidden-view";
-import { SignInCard } from "@/components/auth/sign-in-card";
 import { getContacts, getLeads } from "@/actions/admin";
-import { getAllReviews } from "@/actions/portfolio";
-import { getPortfolioItems, getServices } from "@/lib/queries";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { ContactsList } from "@/components/admin/contacts-list";
+import { LeadsList } from "@/components/admin/leads-list";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { connection } from "next/server";
 
 async function AdminData() {
-  const [contacts, leads, portfolioItems, reviews, services] =
-    await Promise.all([
-      getContacts(),
-      getLeads(),
-      getPortfolioItems(),
-      getAllReviews(),
-      getServices(),
-    ]);
+  await connection();
+  const [contacts, leads] = await Promise.all([getContacts(), getLeads()]);
 
   return (
-    <AdminDashboard
-      initialContacts={contacts}
-      initialLeads={leads}
-      initialPortfolioItems={portfolioItems}
-      initialReviews={reviews}
-      initialServices={services}
-    />
-  );
-}
-
-async function AdminContent() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md border rounded-xl p-6 shadow-sm bg-card">
-          <SignInCard
-            title="Admin Access"
-            description="Sign in to access the admin console"
-            callbackURL="/admin"
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // @ts-expect-error - role is added by admin plugin or schema extension
-  if (session.user.role !== "admin") {
-    return <ForbiddenView />;
-  }
-
-  return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <AdminHeader />
-        <Suspense
-          fallback={
-            <div className="flex justify-center py-20">
-              <Spinner />
-            </div>
-          }
-        >
-          <AdminData />
-        </Suspense>
-      </div>
-    </div>
+    <Tabs defaultValue="contacts" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="contacts">Contacts</TabsTrigger>
+        <TabsTrigger value="leads">Leads</TabsTrigger>
+      </TabsList>
+      <TabsContent value="contacts" className="space-y-4">
+        <ContactsList contacts={contacts} />
+      </TabsContent>
+      <TabsContent value="leads" className="space-y-4">
+        <LeadsList leads={leads} />
+      </TabsContent>
+    </Tabs>
   );
 }
 
 export default function AdminPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <Spinner />
-        </div>
-      }
-    >
-      <AdminContent />
-    </Suspense>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <p className="text-muted-foreground">
+          Manage your contacts and leads here.
+        </p>
+      </div>
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        }
+      >
+        <AdminData />
+      </Suspense>
+    </div>
   );
 }

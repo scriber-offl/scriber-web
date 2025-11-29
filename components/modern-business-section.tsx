@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { BookOpen, TrendingUp, Palette, ArrowUpRight } from "lucide-react";
+import { BookOpen, Palette, ArrowUpRight } from "lucide-react";
 
 const businesses = [
   {
@@ -36,8 +36,7 @@ const businesses = [
   },
   {
     title: "Scriber Branding",
-    description:
-      "Creating memorable brand identities and digital marketing strategies.",
+    description: "Brands built to speak stories, explore our services.",
     icon: Palette,
     href: "/branding",
     pattern: (
@@ -91,8 +90,7 @@ export function ModernBusinessSection() {
               Our Ecosystem
             </h2>
             <p className="text-muted-foreground text-lg">
-              A suite of specialized companies working together to provide
-              comprehensive solutions.
+              Designed for classrooms and built for creators, An ecosystem built to work together, through education, business & designs.
             </p>
           </div>
           <div className="hidden md:block text-right">

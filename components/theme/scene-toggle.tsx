@@ -71,7 +71,7 @@ export function SceneToggle() {
           initial={false}
           animate={{
             top: isDark ? "20px" : "-50px",
-            right: isDark ? "20px" : "50%",
+            right: isDark ? "20px" : "-20px",
             opacity: isDark ? 1 : 0,
             scale: isDark ? 1 : 0.5,
           }}

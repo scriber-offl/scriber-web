@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,7 +56,14 @@ interface ReviewsListProps {
 }
 
 export function ReviewsList({ reviews }: ReviewsListProps) {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleDelete = async (id: string) => {
     try {
