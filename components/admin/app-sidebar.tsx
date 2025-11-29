@@ -51,7 +51,7 @@ export function AppSidebar() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/");
+          window.location.href = "/";
         },
       },
     });

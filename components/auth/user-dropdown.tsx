@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 interface UserDropdownProps {
   session: {
     user: {
@@ -24,14 +23,12 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ session }: UserDropdownProps) {
-  const router = useRouter();
 
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.refresh();
-          router.push("/");
+          window.location.href = "/";
         },
       },
     });
