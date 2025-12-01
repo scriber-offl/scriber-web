@@ -82,6 +82,15 @@ export function PortfolioManager({
 
   return (
     <div className="space-y-4 bg-card/20 p-6">
+      {items.length > 0 && (
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold tracking-tight">Portfolio</h2>
+          <Button onClick={handleAdd}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Portfolio
+          </Button>
+        </div>
+      )}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
           <Card key={item.id} className="flex flex-col pt-0 overflow-hidden">
