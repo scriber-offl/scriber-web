@@ -20,16 +20,17 @@ export function ModernHero() {
           className="space-y-6 max-w-4xl"
         >
           <div className="inline-block border border-foreground/20 px-3 py-1 text-xs font-mono mb-4 tracking-widest uppercase">
-            Est. 2024
+            Est. 2023
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9]">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[0.9]">
             THE SCRIBER <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 px-12">
               COMPANY
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-[600px] mx-auto font-light tracking-wide">
-            Designed for classrooms and built for creators, An ecosystem built to work together, through education, business & designs.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-[600px] mx-auto font-light tracking-wide">
+            Designed for classrooms and built for creators, An ecosystem built
+            to work together, through education, business & designs.
           </p>
         </motion.div>
 

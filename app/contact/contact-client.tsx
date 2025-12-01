@@ -49,7 +49,7 @@ export default function ContactClient() {
                 <h2 className="text-2xl font-bold tracking-tight border-b border-border pb-4">
                   Contact Information
                 </h2>
-                <p className="text-muted-foreground font-light leading-relaxed">
+                <p className="text-base text-muted-foreground font-light leading-relaxed">
                   Reach out to us directly. We are always open to discussing new
                   projects, creative ideas or opportunities to be part of your
                   visions.
@@ -64,8 +64,8 @@ export default function ContactClient() {
                       <Mail className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-medium mb-1">Email Us</h3>
-                      <p className="text-muted-foreground group-hover:text-foreground transition-colors">
+                      <h3 className="text-base font-medium mb-1">Email Us</h3>
+                      <p className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                         contact@scriber.in
                       </p>
                       <span className="text-xs text-muted-foreground mt-1 inline-block border-b border-transparent group-hover:border-foreground/50">
@@ -79,8 +79,8 @@ export default function ContactClient() {
                       <MapPin className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-medium mb-1">Location</h3>
-                      <p className="text-muted-foreground">India</p>
+                      <h3 className="text-base font-medium mb-1">Location</h3>
+                      <p className="text-sm text-muted-foreground">India</p>
                       <p className="text-xs text-muted-foreground mt-1">
                         Serving clients in the Indian region. Planning to extend
                         world-wide soon.

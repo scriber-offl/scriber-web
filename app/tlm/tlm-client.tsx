@@ -65,10 +65,10 @@ export default function TLMClient({
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6">
                   Place Your Order
                 </h2>
-                <p className="text-muted-foreground text-lg mb-8">
+                <p className="text-muted-foreground text-base mb-8">
                   Tell us what you need, and we&apos;ll craft the perfect
                   teaching aid for you. Whether it&apos;s a complex working
                   model or a detailed chart, we&apos;ve got you covered.

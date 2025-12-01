@@ -28,9 +28,9 @@ export function Footer() {
 
   return (
     <footer className="bg-background border-t border-border text-foreground relative overflow-hidden">
-      <div className="container mx-auto px-4 md:px-6 pt-24 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-24">
-          <div className="md:col-span-5 space-y-6">
+      <div className="container mx-auto px-4 md:px-6 pt-16 pb-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-16">
+          <div className="md:col-span-4 space-y-4">
             <Link href="/" className="inline-block">
               <Image
                 src="/scriber-logo.svg"
@@ -40,18 +40,10 @@ export function Footer() {
                 className="dark:invert-0 invert"
               />
             </Link>
-            <p className="text-muted-foreground font-light max-w-xs">
+            <p className="text-sm text-muted-foreground font-light max-w-xs">
               Building teaching learning materials and delivering full scale
               digital marketing.
             </p>
-            <div className="flex gap-4">
-              <Link
-                href="/contact"
-                className="inline-flex h-10 items-center justify-center border border-foreground bg-transparent px-8 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                Contact Us
-              </Link>
-            </div>
             <div className="flex gap-6">
               <Link
                 href="mailto:contact@scriber.in"
@@ -77,15 +69,15 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="md:col-span-3 md:col-start-7 space-y-8">
-            <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-4">
+          <div className="md:col-span-3 md:col-start-6 space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-2">
               Ecosystem
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li>
                 <Link
                   href="/tlm"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
+                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-sm"
                 >
                   Scriber TLM
                   <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -94,7 +86,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/branding"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
+                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-sm"
                 >
                   Scriber Branding
                   <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -103,36 +95,49 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3 space-y-8">
-            <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-4">
+          <div className="md:col-span-2 space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-2">
               Company
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                 >
-                  About Us
-                  <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-2 space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-2">
+              Legal
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                >
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
                   href="/terms"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                 >
-                  Terms & Conditions
-                  <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy-policy"
-                  className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-lg"
-                >
-                  Privacy Policy
-                  <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  Terms of Service
                 </Link>
               </li>
             </ul>
@@ -153,7 +158,7 @@ export function Footer() {
             >
               Johanan S. A.
             </Link>{" "}
-            for {" "}
+            for{" "}
             <Link
               href="https://www.rheniuus.com"
               target="_blank"

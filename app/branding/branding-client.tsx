@@ -59,10 +59,10 @@ export default function BrandingClient({
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6">
                   Let&apos;s Create & Grow Together
                 </h2>
-                <p className="text-muted-foreground text-lg mb-8">
+                <p className="text-muted-foreground text-base mb-8">
                   Whether you need a new brand identity, a digital marketing
                   strategy, or both, we&apos;re here to help you succeed. Tell
                   us about your project.

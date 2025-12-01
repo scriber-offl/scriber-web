@@ -100,7 +100,7 @@ export default function AboutClient() {
                 </h2>
 
                 <div className="space-y-8">
-                  <p className="text-xl text-foreground/80 max-w-2xl leading-relaxed">
+                  <p className="text-base md:text-lg text-foreground/80 max-w-2xl leading-relaxed">
                     At Scriber, we believe that professional and simplified
                     teaching-learning materials are essential.
                   </p>
@@ -110,7 +110,7 @@ export default function AboutClient() {
                     <h3 className="text-2xl font-bold mb-4">
                       Amenities & Facilities
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed mb-8">
+                    <p className="text-base text-muted-foreground leading-relaxed mb-8">
                       That’s why we offer a wide range of amenities designed to
                       meet the needs of traditional teaching materials. Whether
                       you’re a student, a working professional, or someone
@@ -245,7 +245,7 @@ export default function AboutClient() {
             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
               SCRIBER BRANDING CO.
             </h2>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto font-light">
               Where stories speak and brands grow online.
             </p>
           </motion.div>
@@ -260,7 +260,7 @@ export default function AboutClient() {
               <h3 className="text-3xl md:text-4xl font-bold leading-tight">
                 Building Brands That Speak for Themselves
               </h3>
-              <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
+              <div className="space-y-6 text-base md:text-lg text-muted-foreground leading-relaxed">
                 <p>
                   At Scriber Branding Company, we help businesses transform
                   ideas into unforgettable brand experiences. We focus on

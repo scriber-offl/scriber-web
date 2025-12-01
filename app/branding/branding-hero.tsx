@@ -25,10 +25,10 @@ export function BrandingHero() {
             <Palette className="w-4 h-4" />
             <span>Scriber Branding</span>
           </div>
-          <h1 className="text-4xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50">
             Building Brands <br /> That Grow
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
             We create powerful visual identities and data-driven strategies to
             help your business grow and connect with your audience.
           </p>
