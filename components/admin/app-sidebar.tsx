@@ -119,24 +119,29 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                tooltip="Go to Home"
-                onClick={() => {
-                  handleLinkClick();
-                  window.location.href = "/";
-                }}
-              >
-                <Home />
-                <span>Go to Home</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleRefresh} tooltip="Refresh Data">
-                <RefreshCw />
-                <span>Refresh Data</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  tooltip="Go to Home"
+                  onClick={() => {
+                    handleLinkClick();
+                    window.location.href = "/";
+                  }}
+                >
+                  <Home />
+                  <span>Go to Home</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleRefresh}
+                  tooltip="Refresh Data"
+                >
+                  <RefreshCw />
+                  <span>Refresh Data</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
