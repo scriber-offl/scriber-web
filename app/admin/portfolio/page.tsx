@@ -17,12 +17,6 @@ async function PortfolioData() {
 export default function PortfolioPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Portfolio</h2>
-        <p className="text-muted-foreground">
-          Manage your portfolio items here.
-        </p>
-      </div>
       <Suspense
         fallback={
           <div className="flex justify-center py-20">
