@@ -14,6 +14,14 @@ export const leadFormSchema = z.object({
   requirements: z.string().min(10, {
     message: "Please describe your requirements in at least 10 characters.",
   }),
+  institutionName: z.string().optional(),
+  positionInInstitution: z.string().optional(),
+  institutionAddress: z.string().optional(),
+  collaborationType: z.string().optional(),
+  otherCollaboration: z.string().optional(),
+  gradeLevel: z.string().optional(),
+  preferredContact: z.string().optional(),
+  collaborationDescription: z.string().optional(),
 });
 
 export type LeadFormValues = z.infer<typeof leadFormSchema>;

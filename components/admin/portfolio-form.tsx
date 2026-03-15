@@ -29,7 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useEffect, useRef } from "react";
+import { Switch } from "@/components/ui/switch";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   createPortfolioItem,
   updatePortfolioItem,
@@ -38,18 +39,18 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { upload } from "@vercel/blob/client";
-import { Loader2, Trash2, UploadCloud } from "lucide-react";
+import { Loader2, Trash2, UploadCloud, Star } from "lucide-react";
 import Image from "next/image";
 
 interface PortfolioItem {
   id: string;
   title: string;
   category: string;
-  stream: string;
   image: string;
   description: string;
   fullDescription: string;
   serviceType: string;
+  featured: boolean;
   customerEmails: string[] | unknown;
 }
 
@@ -57,7 +58,7 @@ interface PortfolioFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   itemToEdit?: PortfolioItem | null;
-  services: { id: string; name: string; stream: string }[];
+  services: { id: string; name: string }[];
 }
 
 export function PortfolioForm({
@@ -73,14 +74,26 @@ export function PortfolioForm({
   const [formData, setFormData] = useState({
     title: "",
     category: "",
-    stream: "branding",
     image: "",
     description: "",
     fullDescription: "",
     serviceType: "",
+    featured: false,
     customerEmails: "",
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const serviceOptions = useMemo(() => {
+    const canonical = services.map((service) => service.name);
+    const selected = formData.serviceType?.trim();
+
+    if (!selected || canonical.includes(selected)) {
+      return canonical;
+    }
+
+    // Keep existing value selectable for legacy rows even if service was renamed/deleted.
+    return [selected, ...canonical];
+  }, [formData.serviceType, services]);
 
   useEffect(() => {
     if (itemToEdit) {
@@ -88,11 +101,11 @@ export function PortfolioForm({
       setFormData({
         title: itemToEdit.title,
         category: itemToEdit.category,
-        stream: itemToEdit.stream,
         image: itemToEdit.image,
         description: itemToEdit.description,
         fullDescription: itemToEdit.fullDescription,
         serviceType: itemToEdit.serviceType,
+        featured: itemToEdit.featured ?? false,
         customerEmails: Array.isArray(itemToEdit.customerEmails)
           ? itemToEdit.customerEmails.join(", ")
           : "",
@@ -102,11 +115,11 @@ export function PortfolioForm({
       setFormData({
         title: "",
         category: "",
-        stream: "branding",
         image: "",
         description: "",
         fullDescription: "",
         serviceType: "",
+        featured: false,
         customerEmails: "",
       });
     }
@@ -123,7 +136,6 @@ export function PortfolioForm({
 
     try {
       if (itemId) {
-        // Update existing
         await updatePortfolioItem(itemId, {
           ...formData,
           customerEmails: emails,
@@ -132,7 +144,6 @@ export function PortfolioForm({
         router.refresh();
         onOpenChange(false);
       } else {
-        // Create new
         const newId = await createPortfolioItem({
           ...formData,
           customerEmails: emails,
@@ -141,17 +152,17 @@ export function PortfolioForm({
         toast.success("Item created! Now upload an image.");
         router.refresh();
       }
-    } catch {
-      toast.error("Failed to save portfolio item");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to save portfolio item",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      return;
-    }
+    if (!e.target.files || e.target.files.length === 0) return;
     if (!itemId) {
       toast.error("Please create the item first");
       return;
@@ -161,7 +172,6 @@ export function PortfolioForm({
     setUploading(true);
 
     try {
-      // If there's an existing image, delete it first
       if (formData.image) {
         await deletePortfolioImage(formData.image);
       }
@@ -180,15 +190,12 @@ export function PortfolioForm({
       toast.error("Failed to upload image");
     } finally {
       setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleRemoveImage = async () => {
     if (!formData.image || !itemId) return;
-
     setUploading(true);
     try {
       await deletePortfolioImage(formData.image);
@@ -232,52 +239,50 @@ export function PortfolioForm({
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
                 }
-                placeholder="e.g. Brand Identity"
+                placeholder="e.g. Chart Work"
                 required
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="stream">Stream</Label>
-              <Select
-                value={formData.stream}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, stream: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select stream" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="branding">Branding</SelectItem>
-                  <SelectItem value="tlm">TLM</SelectItem>
-                </SelectContent>
-              </Select>
+          <div className="space-y-2">
+            <Label htmlFor="serviceType">Service Type</Label>
+            <Select
+              value={formData.serviceType}
+              onValueChange={(value) =>
+                setFormData({ ...formData, serviceType: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select service type" />
+              </SelectTrigger>
+              <SelectContent>
+                {serviceOptions.map((serviceName) => (
+                  <SelectItem key={serviceName} value={serviceName}>
+                    {serviceName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center justify-between rounded-lg border p-3 bg-muted/30">
+            <div className="space-y-0.5">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-500" />
+                Featured on Homepage
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Max 3 featured items per service type. Featured items appear on
+                the landing page.
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="serviceType">Service Type</Label>
-              <Select
-                value={formData.serviceType}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, serviceType: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select service type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {services
-                    .filter((s) => s.stream === formData.stream)
-                    .map((service) => (
-                      <SelectItem key={service.id} value={service.name}>
-                        {service.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Switch
+              checked={formData.featured}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, featured: checked })
+              }
+            />
           </div>
 
           {itemId && (

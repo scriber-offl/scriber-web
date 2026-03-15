@@ -4,14 +4,14 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact Us — Scriber",
   description:
-    "Get in touch with Scriber. We are ready to help you transform your ideas into reality. Contact us for educational resources, digital marketing, or branding solutions.",
+    "Get in touch with Scriber. We are ready to help you with teaching learning materials, chart works, working models, and educational aids.",
   keywords: [
     "Contact Scriber",
     "Scriber Support",
-    "Scriber Email",
-    "Scriber Location",
+    "Order TLM",
+    "Teaching Aids Enquiry",
     "Business Inquiry",
   ],
 };

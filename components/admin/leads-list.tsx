@@ -41,6 +41,14 @@ interface Lead {
   phone: string;
   serviceType: string | null;
   requirements: string;
+  institutionName: string | null;
+  positionInInstitution: string | null;
+  institutionAddress: string | null;
+  collaborationType: string | null;
+  otherCollaboration: string | null;
+  gradeLevel: string | null;
+  preferredContact: string | null;
+  collaborationDescription: string | null;
   createdAt: Date;
 }
 
@@ -108,6 +116,74 @@ export function LeadsList({ leads }: { leads: Lead[] }) {
                         {lead.requirements}
                       </p>
                     </div>
+                    {lead.institutionName && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Institution / School Name
+                        </h4>
+                        <p className="text-sm">{lead.institutionName}</p>
+                      </div>
+                    )}
+                    {lead.positionInInstitution && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Position in Institution
+                        </h4>
+                        <p className="text-sm">{lead.positionInInstitution}</p>
+                      </div>
+                    )}
+                    {lead.institutionAddress && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Institution Address
+                        </h4>
+                        <p className="text-sm whitespace-pre-wrap">
+                          {lead.institutionAddress}
+                        </p>
+                      </div>
+                    )}
+                    {lead.collaborationType && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Collaboration Type
+                        </h4>
+                        <p className="text-sm">{lead.collaborationType}</p>
+                      </div>
+                    )}
+                    {lead.otherCollaboration && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Other Collaboration
+                        </h4>
+                        <p className="text-sm">{lead.otherCollaboration}</p>
+                      </div>
+                    )}
+                    {lead.gradeLevel && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Grade Level / Classes
+                        </h4>
+                        <p className="text-sm">{lead.gradeLevel}</p>
+                      </div>
+                    )}
+                    {lead.preferredContact && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Preferred Contact
+                        </h4>
+                        <p className="text-sm">{lead.preferredContact}</p>
+                      </div>
+                    )}
+                    {lead.collaborationDescription && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">
+                          Collaboration Description
+                        </h4>
+                        <p className="text-sm whitespace-pre-wrap">
+                          {lead.collaborationDescription}
+                        </p>
+                      </div>
+                    )}
                     <div className="flex gap-2 pt-4 flex-wrap">
                       <Button asChild variant="outline" size="sm">
                         <a href={`mailto:${lead.email}`}>
@@ -125,7 +201,7 @@ export function LeadsList({ leads }: { leads: Lead[] }) {
                         <a
                           href={`https://wa.me/${lead.phone.replace(
                             /\D/g,
-                            ""
+                            "",
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Instagram, Mail } from "lucide-react";
+import { ArrowRight, Instagram, Linkedin, Mail } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/toggle";
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -41,8 +42,8 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-muted-foreground font-light max-w-xs">
-              Building teaching learning materials and delivering full scale
-              digital marketing.
+              Crafting teaching learning materials and educational aids for
+              classrooms and creators.
             </p>
             <div className="flex gap-6">
               <Link
@@ -50,45 +51,54 @@ export function Footer() {
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Email"
               >
-                <Mail className="w-6 h-6" />
+                <Mail className="w-5.5 h-5.5" />
               </Link>
               <Link
                 href="https://www.instagram.com/scriberofficial/"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Instagram"
               >
-                <Instagram className="w-6 h-6" />
+                <Instagram className="w-5.5 h-5.5" />
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/scriberofficial/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5.5 h-5.5" />
               </Link>
               <Link
                 href="https://wa.me/918903340674"
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="WhatsApp"
               >
-                <WhatsAppIcon className="w-6 h-6" />
+                <WhatsAppIcon className="w-5.5 h-5.5" />
               </Link>
             </div>
           </div>
 
           <div className="md:col-span-3 md:col-start-6 space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest border-b border-border pb-2">
-              Ecosystem
+              Explore
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/tlm"
+                  href="/portfolio"
                   className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-sm"
                 >
-                  Scriber TLM
+                  Portfolio
                   <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/branding"
+                  href="/#collaboration"
                   className="text-muted-foreground hover:text-foreground transition-colors flex items-center group text-sm"
                 >
-                  Scriber Branding
+                  Get a Quote
                   <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
               </li>
@@ -145,9 +155,12 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border py-8 flex flex-col md:flex-row justify-between items-end gap-4 relative z-20">
-          <p className="text-sm text-muted-foreground">
-            © {currentYear} The Scriber Company.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © {currentYear} The Scriber Company.
+            </p>
+            <ThemeToggle />
+          </div>
           <p className="text-sm text-muted-foreground">
             Built & Maintained by{" "}
             <Link

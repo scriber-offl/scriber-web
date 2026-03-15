@@ -2,7 +2,8 @@
 
 import { db } from "@/db";
 import { portfolio, reviews } from "@/db/schema/portfolio";
-import { desc, eq, and } from "drizzle-orm";
+import { services } from "@/db/schema/services";
+import { desc, eq, and, count, ne, asc, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { del } from "@vercel/blob";
@@ -53,28 +54,72 @@ import { user } from "@/db/schema/auth";
 
 export async function createPortfolioItem(data: typeof portfolio.$inferInsert) {
   await checkAdmin();
+
+  if (data.featured && data.serviceType) {
+    const [{ total }] = await db
+      .select({ total: count() })
+      .from(portfolio)
+      .where(
+        and(
+          eq(portfolio.serviceType, data.serviceType),
+          eq(portfolio.featured, true),
+        ),
+      );
+    if (total >= 3) {
+      throw new Error(
+        `Maximum 3 featured items allowed per service type. "${data.serviceType}" already has 3.`,
+      );
+    }
+  }
+
   const [inserted] = await db
     .insert(portfolio)
     .values(data)
     .returning({ id: portfolio.id });
 
   revalidatePath("/admin");
-  revalidatePath("/tlm");
-  revalidatePath("/branding");
+  revalidatePath("/");
+  revalidatePath("/portfolio");
 
   return inserted.id;
 }
 
 export async function updatePortfolioItem(
   id: string,
-  data: Partial<typeof portfolio.$inferInsert>
+  data: Partial<typeof portfolio.$inferInsert>,
 ) {
   await checkAdmin();
+
+  if (data.featured === true) {
+    const [current] = await db
+      .select()
+      .from(portfolio)
+      .where(eq(portfolio.id, id));
+    const serviceType = data.serviceType ?? current?.serviceType;
+    if (serviceType) {
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(portfolio)
+        .where(
+          and(
+            eq(portfolio.serviceType, serviceType),
+            eq(portfolio.featured, true),
+            ne(portfolio.id, id),
+          ),
+        );
+      if (total >= 3) {
+        throw new Error(
+          `Maximum 3 featured items allowed per service type. "${serviceType}" already has 3.`,
+        );
+      }
+    }
+  }
+
   await db.update(portfolio).set(data).where(eq(portfolio.id, id));
 
   revalidatePath("/admin");
-  revalidatePath("/tlm");
-  revalidatePath("/branding");
+  revalidatePath("/");
+  revalidatePath("/portfolio");
 }
 
 export async function deletePortfolioItem(id: string) {
@@ -86,8 +131,8 @@ export async function deletePortfolioItem(id: string) {
   await db.delete(portfolio).where(eq(portfolio.id, id));
 
   revalidatePath("/admin");
-  revalidatePath("/tlm");
-  revalidatePath("/branding");
+  revalidatePath("/");
+  revalidatePath("/portfolio");
 }
 
 export async function deletePortfolioImage(url: string) {
@@ -98,7 +143,7 @@ export async function deletePortfolioImage(url: string) {
 export async function addReview(
   portfolioId: string,
   rating: number,
-  comment: string
+  comment: string,
 ) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -123,8 +168,8 @@ export async function addReview(
     .where(
       and(
         eq(reviews.portfolioId, portfolioId),
-        eq(reviews.userId, session.user.id)
-      )
+        eq(reviews.userId, session.user.id),
+      ),
     );
 
   if (existingReview.length > 0) {
@@ -143,6 +188,35 @@ export async function deleteReview(id: string) {
   await checkAdmin();
   await db.delete(reviews).where(eq(reviews.id, id));
 }
+
+// ── Public pagination actions (no auth required) ───────────────────────────
+
+export async function getMorePortfolioByServiceType(
+  serviceType: string,
+  offset: number,
+  limit = 5,
+) {
+  return db
+    .select()
+    .from(portfolio)
+    .where(
+      sql`lower(trim(${portfolio.serviceType})) = lower(trim(${serviceType}))`,
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(portfolio.createdAt));
+}
+
+export async function getMoreServices(offset: number, limit = 5) {
+  return db
+    .select()
+    .from(services)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(asc(services.createdAt));
+}
+
+// ── Admin review actions ─────────────────────────────────────────────────────
 
 export async function getAllReviews() {
   await checkAdmin();

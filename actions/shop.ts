@@ -34,7 +34,7 @@ export async function createProduct(data: {
   await checkAdmin();
   const [product] = await db.insert(shopProducts).values(data).returning();
   revalidatePath("/admin");
-  revalidatePath("/tlm");
+  revalidatePath("/");
   return product;
 }
 
@@ -45,7 +45,7 @@ export async function updateProductImage(id: string, imageUrl: string) {
     .set({ image: imageUrl })
     .where(eq(shopProducts.id, id));
   revalidatePath("/admin");
-  revalidatePath("/tlm");
+  revalidatePath("/");
 }
 
 export async function deleteProduct(id: string, imageUrl: string | null) {
@@ -59,7 +59,7 @@ export async function deleteProduct(id: string, imageUrl: string | null) {
   }
   await db.delete(shopProducts).where(eq(shopProducts.id, id));
   revalidatePath("/admin");
-  revalidatePath("/tlm");
+  revalidatePath("/");
 }
 
 export async function deleteProductImage(imageUrl: string) {
@@ -78,12 +78,12 @@ export async function updateProduct(
     description: string;
     specs: string;
     minOrderQuantity: number;
-  }
+  },
 ) {
   await checkAdmin();
   await db.update(shopProducts).set(data).where(eq(shopProducts.id, id));
   revalidatePath("/admin");
-  revalidatePath("/tlm");
+  revalidatePath("/");
 }
 
 export async function getShopEnquiries() {

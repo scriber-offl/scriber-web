@@ -3,8 +3,10 @@ import { Geist, Geist_Mono, Unlock } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,19 +27,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://scriber.in"),
   title: {
-    default: "Scriber - Digital Solutions & Educational Marketplace",
+    default: "Scriber - Teaching Learning Materials & Educational Aids",
     template: "%s | Scriber",
   },
   description:
-    "Scriber: TLM Marketplace for educational materials, and Scriber Branding for complete business branding and digital marketing solutions.",
+    "Scriber crafts high-quality Teaching Learning Materials (TLM) — chart works, working models, and B.Ed project aids tailored to your curriculum.",
   keywords: [
     "Scriber",
     "TLM",
     "Teaching Learning Materials",
-    "Digital Marketing",
-    "Branding",
-    "Educational Marketplace",
-    "Scriber Branding",
+    "Chart Works",
+    "Working Models",
+    "B.Ed Teaching Aids",
+    "Educational Materials",
   ],
   openGraph: {
     type: "website",
@@ -49,15 +51,15 @@ export const metadata: Metadata = {
         url: "/scriber-og.png",
         width: 1200,
         height: 630,
-        alt: "Scriber - Digital Solutions & Educational Marketplace",
+        alt: "Scriber - Teaching Learning Materials & Educational Aids",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Scriber - Digital Solutions & Educational Marketplace",
+    title: "Scriber - Teaching Learning Materials & Educational Aids",
     description:
-      "Scriber: TLM Marketplace for educational materials, and Scriber Branding for complete business branding and digital marketing solutions.",
+      "Scriber crafts high-quality Teaching Learning Materials (TLM) — chart works, working models, and B.Ed project aids tailored to your curriculum.",
     images: ["/scriber-og.png"],
   },
 };
@@ -93,11 +95,17 @@ export default function RootLayout({
         <SpeedInsights />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          <NextTopLoader
+            color={"var(--color-primary)"}
+            showSpinner={false}
+            showForHashAnchor={false}
+          />
           {children}
+          <ScrollToTop />
           <Toaster />
         </ThemeProvider>
       </body>

@@ -21,8 +21,21 @@ export async function createLead(values: z.infer<typeof leadFormSchema>) {
     throw new Error("Invalid fields");
   }
 
-  const { name, email, phone, serviceType, requirements } =
-    validatedFields.data;
+  const {
+    name,
+    email,
+    phone,
+    serviceType,
+    requirements,
+    institutionName,
+    positionInInstitution,
+    institutionAddress,
+    collaborationType,
+    otherCollaboration,
+    gradeLevel,
+    preferredContact,
+    collaborationDescription,
+  } = validatedFields.data;
 
   // 3. Database Insertion
   try {
@@ -32,6 +45,14 @@ export async function createLead(values: z.infer<typeof leadFormSchema>) {
       phone,
       serviceType,
       requirements,
+      institutionName,
+      positionInInstitution,
+      institutionAddress,
+      collaborationType,
+      otherCollaboration,
+      gradeLevel,
+      preferredContact,
+      collaborationDescription,
     });
 
     return { success: true, message: "Lead submitted successfully!" };

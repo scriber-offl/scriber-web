@@ -2,18 +2,16 @@ import { Metadata } from "next";
 import AboutClient from "./about-client";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us — Scriber",
   description:
-    "Learn about Scriber's mission to empower businesses and educators through innovation, design, and strategy. Discover our specialized companies: Scriber TLM and Scriber Branding.",
+    "Learn about Scriber's mission to empower educators through innovation, creativity, and high-quality teaching learning materials.",
   keywords: [
     "About Scriber",
     "Scriber Mission",
     "Scriber Values",
-    "Scriber TLM",
-    "Scriber Branding",
-    "Education Technology",
-    "Digital Marketing Agency",
-    "Branding Agency",
+    "Teaching Learning Materials",
+    "Educational Aids",
+    "TLM",
   ],
 };
 

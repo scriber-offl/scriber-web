@@ -3,52 +3,74 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import Image from "next/image";
 
 export function ModernHero() {
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-background text-foreground">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-foreground/5 opacity-20 blur-[100px]"></div>
-      </div>
-
-      <div className="z-10 container px-4 md:px-6 flex flex-col items-center text-center space-y-8">
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-card text-foreground">
+      <div className="z-10 container px-4 md:px-6 grid lg:grid-cols-[2fr_3fr] gap-12 lg:gap-4 items-center">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6 max-w-4xl"
+          className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-6 max-w-2xl order-2 lg:order-1 mt-4 lg:mt-0"
         >
-          <div className="inline-block border border-foreground/20 px-3 py-1 text-xs font-mono mb-4 tracking-widest uppercase">
-            Est. 2023
-          </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[0.9]">
-            THE SCRIBER <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 px-12">
-              COMPANY
-            </span>
+          <h1 className="font-swirly-canalope text-4xl md:text-5xl lg:text-7xl">
+            Building the future of Classroom Learning with our Teaching &
+            Learning Materials
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-[600px] mx-auto font-light tracking-wide">
-            Designed for classrooms and built for creators, An ecosystem built
-            to work together, through education, business & designs.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-[500px] font-light tracking-wide">
+            Crafting teaching-learning materials for schools, educators, and
+            B.Ed learners who need reliable, curriculum-ready classroom aids.
           </p>
+
+          <div className="flex flex-row gap-3 pt-6 justify-center lg:justify-start">
+            <Link
+              href="/#collaboration"
+              scroll={false}
+              onClick={(e) => {
+                const section = document.getElementById("collaboration");
+                if (!section) return;
+
+                e.preventDefault();
+                const y =
+                  section.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: "smooth" });
+                window.history.replaceState(null, "", "/#collaboration");
+              }}
+            >
+              <Button className="gap-2 rounded-none text-xs font-bold uppercase tracking-wider">
+                Partner with Us
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button
+                variant={"outline"}
+                className="gap-2 text-xs font-bold uppercase tracking-wider border-foreground text-foreground bg-transparent hover:bg-foreground hover:text-background dark:bg-transparent dark:hover:bg-foreground rounded-none"
+              >
+                <span className="relative z-10 flex items-center">
+                  Discover More
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row gap-4 pt-8"
+          className="relative w-full flex items-center justify-center order-1 lg:order-2 mt-12 lg:mt-0"
         >
-          <Link
-            href="/about"
-            className="group relative inline-flex h-12 items-center justify-center overflow-hidden bg-foreground text-background px-8 text-sm font-medium transition-all hover:bg-foreground/90"
-          >
-            <span className="relative z-10 flex items-center">
-              Discover More
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </Link>
+          <Image
+            src="/hero.svg"
+            alt="Hero Graphic"
+            width={1100}
+            height={1100}
+            className="w-full max-w-xl lg:max-w-none lg:scale-110"
+          />
         </motion.div>
       </div>
     </div>

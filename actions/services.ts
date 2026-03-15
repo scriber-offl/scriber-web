@@ -2,14 +2,13 @@
 
 import { db } from "@/db";
 import { services } from "@/db/schema/services";
-import { eq } from "drizzle-orm";
+import { eq, and, ne, count } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { del } from "@vercel/blob";
 
 export async function createService(data: {
   name: string;
   description?: string;
-  stream: string;
   image?: string;
 }) {
   try {
@@ -18,9 +17,8 @@ export async function createService(data: {
       .values(data)
       .returning({ id: services.id });
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/contact");
-    revalidatePath("/branding");
-    revalidatePath("/tlm");
     return {
       success: true,
       message: "Service created successfully",
@@ -37,16 +35,27 @@ export async function updateService(
   data: {
     name?: string;
     description?: string;
-    stream?: string;
     image?: string;
-  }
+    featured?: boolean;
+  },
 ) {
   try {
+    if (data.featured === true) {
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(services)
+        .where(and(eq(services.featured, true), ne(services.id, id)));
+      if (total >= 4) {
+        return {
+          success: false,
+          message: "Maximum 4 services can be featured at once",
+        };
+      }
+    }
     await db.update(services).set(data).where(eq(services.id, id));
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/contact");
-    revalidatePath("/branding");
-    revalidatePath("/tlm");
     return { success: true, message: "Service updated successfully" };
   } catch (error) {
     console.error("Failed to update service:", error);
@@ -65,9 +74,8 @@ export async function deleteService(id: string) {
     }
     await db.delete(services).where(eq(services.id, id));
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/contact");
-    revalidatePath("/branding");
-    revalidatePath("/tlm");
     return { success: true, message: "Service deleted successfully" };
   } catch (error) {
     console.error("Failed to delete service:", error);

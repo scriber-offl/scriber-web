@@ -3,23 +3,11 @@
 import {
   Layers,
   PenTool,
-  Palette,
   BookOpen,
   Layout,
-  Globe,
-  Share2,
-  BarChart,
-  TrendingUp,
-  Megaphone,
-  Monitor,
-  Smartphone,
-  Search,
-  Mail,
-  Video,
-  Image as ImageIcon,
-  Type,
   Box,
   Briefcase,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -29,7 +17,6 @@ interface Service {
   id: string;
   name: string;
   description: string | null;
-  stream: string;
   image: string | null;
 }
 
@@ -39,28 +26,7 @@ interface ServicesSectionProps {
   description?: string;
 }
 
-const ICON_SETS = {
-  branding: [
-    Palette,
-    PenTool,
-    Layout,
-    Type,
-    ImageIcon,
-    Box,
-    BarChart,
-    Globe,
-    Share2,
-    TrendingUp,
-    Search,
-    Megaphone,
-    Monitor,
-    Smartphone,
-    Mail,
-    Video,
-  ],
-  tlm: [BookOpen, Layers, Box, Briefcase, PenTool],
-  default: [Layers, PenTool, Layout],
-};
+const ICON_SET = [BookOpen, Layers, Box, Briefcase, PenTool, Layout, ImageIcon];
 
 export function ServicesSection({
   services,
@@ -83,16 +49,13 @@ export function ServicesSection({
 
         <div className="grid md:grid-cols-3 gap-8 mb-20">
           {services.map((service, index) => {
-            const streamIcons =
-              ICON_SETS[service.stream as keyof typeof ICON_SETS] ||
-              ICON_SETS.default;
             const iconIndex =
               Math.abs(
                 service.name
                   .split("")
-                  .reduce((acc, char) => acc + char.charCodeAt(0), 0)
-              ) % streamIcons.length;
-            const Icon = streamIcons[iconIndex];
+                  .reduce((acc, char) => acc + char.charCodeAt(0), 0),
+              ) % ICON_SET.length;
+            const Icon = ICON_SET[iconIndex];
 
             return (
               <motion.div

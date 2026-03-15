@@ -8,17 +8,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThemeToggle } from "@/components/theme/toggle";
-import { SceneToggle } from "@/components/theme/scene-toggle";
 import Link from "next/link";
 import Image from "next/image";
 
 // Navigation links - add your links here, leave empty to hide navigation
 const navLinks: { name: string; href: string }[] = [
   { name: "Home", href: "/" },
+  { name: "Portfolio", href: "/portfolio" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
@@ -39,6 +37,8 @@ export function HeaderClient({ children }: { children: React.ReactNode }) {
         >
           <Link
             href="/"
+            scroll
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scriber home"
             className="flex items-center"
           >
@@ -103,15 +103,9 @@ export function HeaderClient({ children }: { children: React.ReactNode }) {
                       </a>
                     </DropdownMenuItem>
                   ))}
-                {navLinks.length > 0 && <DropdownMenuSeparator />}
-                <DropdownMenuItem className="p-0 focus:bg-transparent">
-                  <SceneToggle />
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          <ThemeToggle className="hidden md:flex" />
         </div>
       </div>
     </motion.header>

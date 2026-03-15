@@ -5,18 +5,19 @@ import {
   integer,
   json,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 
 export const portfolio = pgTable("portfolio", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
-  category: text("category").notNull(), // e.g., "Brand Identity", "Logo Design"
-  stream: text("stream").notNull(), // "branding", "tlm"
+  category: text("category").notNull(), // e.g., "Chart Work", "Working Model"
   image: text("image").notNull(),
   description: text("description").notNull(),
   fullDescription: text("full_description").notNull(),
   serviceType: text("service_type").notNull(), // For the form prefill
+  featured: boolean("featured").default(false).notNull(),
   customerEmails: json("customer_emails").$type<string[]>().default([]), // List of emails allowed to review
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

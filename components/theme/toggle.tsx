@@ -1,154 +1,71 @@
-"use client";
-
 import * as React from "react";
 import { useTheme } from "next-themes";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import { Button } from "@/components/ui/button";
-import { AnimatePresence, motion } from "framer-motion";
-
-const useThemeCycle = () => {
-  const { theme, setTheme } = useTheme();
-
-  const cycleTheme = React.useCallback(() => {
-    const themes = ["light", "dark"];
-    const currentIndex = themes.indexOf(theme || "light");
-    const nextIndex = (currentIndex + 1) % themes.length;
-    return themes[nextIndex];
-  }, [theme]);
-
-  return { theme, setTheme, cycleTheme };
-};
-
-const useViewTransition = (
-  buttonRef: React.RefObject<HTMLButtonElement | null>
-) => {
-  React.useEffect(() => {
-    const style = document.createElement("style");
-    style.textContent = `
-      @keyframes circle-grow {
-        from {
-          clip-path: circle(0% at var(--x-position, 50%) var(--y-position, 50%));
-        }
-        to {
-          clip-path: circle(150% at var(--x-position, 50%) var(--y-position, 50%));
-        }
-      }
-
-      ::view-transition-new(root) {
-        animation: 1.3s circle-grow ease-out;
-      }
-
-      ::view-transition-old(root) {
-        animation: none;
-        mix-blend-mode: normal;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
-  const startTransition = React.useCallback(
-    (callback: () => void) => {
-      if ("startViewTransition" in document) {
-        const button = buttonRef.current;
-        if (button) {
-          const rect = button.getBoundingClientRect();
-          const x = rect.left + rect.width / 2;
-          const y = rect.top + rect.height / 2;
-
-          document.documentElement.style.setProperty("--x-position", `${x}px`);
-          document.documentElement.style.setProperty("--y-position", `${y}px`);
-        }
-
-        document.startViewTransition(callback);
-      } else {
-        callback();
-      }
-    },
-    [buttonRef]
-  );
-
-  return startTransition;
-};
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { MoonIcon, SunIcon, Monitor } from "lucide-react";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const { theme, setTheme, cycleTheme } = useThemeCycle();
-  const startTransition = useViewTransition(buttonRef);
-
-  const handleThemeChange = React.useCallback(() => {
-    const newTheme = cycleTheme();
-    startTransition(() => setTheme(newTheme));
-  }, [cycleTheme, setTheme, startTransition]);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  const getThemeIcon = () => {
-    if (!mounted) return null;
-
+  if (!mounted) {
     return (
-      <AnimatePresence mode="wait" initial={false}>
-        {theme === "light" && (
-          <motion.span
-            key="light"
-            initial={{ opacity: 0, scale: 0.7, rotate: -30 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, scale: 0.7, rotate: 30 }}
-            transition={{
-              duration: 2,
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-            }}
-            className="flex items-center justify-center"
-          >
-            <LightModeIcon
-              fontSize="small"
-              className="rotate-0 scale-100 transition-all"
-            />
-          </motion.span>
+      <div
+        className={cn(
+          "flex items-center p-1 rounded-none border bg-background/50 backdrop-blur-sm h-9 w-fit",
+          className,
         )}
-        {theme === "dark" && (
-          <motion.span
-            key="dark"
-            initial={{ opacity: 0, scale: 0.7, rotate: 30 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, scale: 0.7, rotate: -30 }}
-            transition={{
-              duration: 2,
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-            }}
-            className="flex items-center justify-center"
-          >
-            <DarkModeIcon
-              fontSize="small"
-              className="rotate-0 scale-100 transition-all"
-            />
-          </motion.span>
-        )}
-      </AnimatePresence>
+      >
+        <div className="h-7 w-7 rounded-none bg-muted/50" />
+        <div className="h-7 w-7 rounded-none bg-muted/50 ml-1" />
+        <div className="h-7 w-7 rounded-none bg-muted/50 ml-1" />
+      </div>
     );
-  };
+  }
+
+  const modes = [
+    { value: "light", icon: SunIcon },
+    { value: "system", icon: Monitor },
+    { value: "dark", icon: MoonIcon },
+  ];
 
   return (
-    <Button
-      ref={buttonRef}
-      variant="outline"
-      size="icon"
-      onClick={handleThemeChange}
-      className={`flex items-center justify-center ${className || ""}`}
+    <div
+      className={cn(
+        "flex items-center p-1 rounded-none border bg-background/50 backdrop-blur-sm h-9 w-fit shadow-sm",
+        className,
+      )}
     >
-      {getThemeIcon()}
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+      {modes.map((mode) => {
+        const isActive = theme === mode.value;
+        const Icon = mode.icon;
+
+        return (
+          <button
+            key={mode.value}
+            onClick={() => setTheme(mode.value)}
+            className={cn(
+              "relative flex items-center justify-center h-7 w-7 rounded-none text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              isActive && "text-foreground",
+            )}
+            type="button"
+            aria-label={`Switch to ${mode.value} mode`}
+          >
+            {isActive && (
+              <motion.div
+                layoutId="theme-active"
+                className="absolute inset-0 rounded-none bg-muted shadow-sm border"
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            )}
+            <Icon className="relative z-10 size-3.5" />
+          </button>
+        );
+      })}
+    </div>
   );
 }

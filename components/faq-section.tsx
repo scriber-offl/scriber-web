@@ -13,12 +13,12 @@ const faqs = [
   {
     question: "What is Scriber?",
     answer:
-      "Scriber is a service ecosystem that creates high-quality Teaching Learning Materials (TLM) and provides full-scale digital marketing, branding, and design solutions for educational institutions and businesses.",
+      "Scriber creates high-quality Teaching Learning Materials (TLM) for schools, educators, and B.Ed learners, including chart works, working models, project aids, and custom classroom resources.",
   },
   {
     question: "What services does Scriber offer?",
     answer:
-      "We offer TLM development, branding, content creation, digital marketing, website support, design services, and sales auditing.",
+      "We develop charts, working models, classroom visuals, instructional kits, and B.Ed project aids tailored to school requirements, curriculum standards, and grade levels.",
   },
   {
     question: "What types of teaching materials do you provide?",
@@ -33,17 +33,17 @@ const faqs = [
   {
     question: "What branding services do you provide?",
     answer:
-      "Logo design, visual identity creation, brand strategy, social media identity, and marketing assets.",
+      "We specialise exclusively in Teaching Learning Materials. For TLM customisation requests, you can reach out via our contact page.",
   },
   {
     question: "Do you handle social media promotions?",
     answer:
-      "Yes. We manage online presence, create content, promote products, and collaborate with popular YouTube channels and influencers.",
+      "Yes. We collaborate with educators, YouTube channels, and influencers to promote quality teaching resources and educational content.",
   },
   {
     question: "How are charges calculated?",
     answer:
-      "Pricing depends on the service:\n• TLM based on size, material, and customization\n• Branding based on scope and deliverables\n• Digital marketing based on duration and platform",
+      "Pricing for TLM is based on size, materials used, and level of customisation. Contact us for a quote on bulk or institutional orders.",
   },
   {
     question: "Do you offer nationwide delivery?",
@@ -107,21 +107,15 @@ export function FAQSection() {
           </Accordion>
 
           <div className="text-center mt-12">
-            {visibleCount < faqs.length ? (
-              <p className="text-sm text-muted-foreground animate-pulse">
-                Click on a question to reveal more...
-              </p>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Have more questions?{" "}
-                <a
-                  href="/contact"
-                  className="text-primary hover:underline font-medium"
-                >
-                  Contact us
-                </a>
-              </p>
-            )}
+            <p className="text-sm text-muted-foreground">
+              Have more questions?{" "}
+              <a
+                href="/contact"
+                className="text-primary hover:underline font-medium"
+              >
+                Contact us
+              </a>
+            </p>
           </div>
         </div>
       </div>

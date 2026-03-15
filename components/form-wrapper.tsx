@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -25,6 +26,11 @@ export function FormWrapper({
 }: FormWrapperProps) {
   const { data: session, isPending } = authClient.useSession();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSignIn = async (provider: "google" | "github") => {
     await authClient.signIn.social({
@@ -33,7 +39,7 @@ export function FormWrapper({
     });
   };
 
-  if (isPending) {
+  if (!mounted || isPending) {
     return (
       <div className="flex justify-center items-center p-8">
         <Spinner className="h-8 w-8 text-muted-foreground" />
